@@ -1,0 +1,27 @@
+{
+  "name": "odyssey",
+  "version": "0.0.1",
+  "description": "A plugin for Logseq that enables TTRPG players and DMs to track and plan campaigns and one-shots.",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "logseq",
+    "ttrpg",
+    "dnd",
+    "d&d"
+  ],
+  "author": "Vanessa Good / shiftregister-vg <shiftregister@protonmail.com>",
+  "license": "MIT",
+  "browserslist": [
+    "chrome 80"
+  ],
+  "logseq": {
+    "id": "_odyssey",
+    "icon": "logseq.png"
+  },
+  "dependencies": {
+    "@logseq/libs": "^0.0.17"
+  }
+}
