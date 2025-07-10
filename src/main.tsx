@@ -5,6 +5,8 @@ import App from './App'
 import '@logseq/libs'
 
 const main = async () => {
+  logseq.UI.showMsg('Odyssey plugin loaded');
+
   logseq.App.onMacroRendererSlotted(
     async ({ slot, payload: { uuid, arguments: args } }) => {
       const [type] = args
