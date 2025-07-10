@@ -22,3 +22,9 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Local vite plugin build artifacts
+vite-plugin-logseq-local.js
+vite-plugin-logseq-local.d.ts
+tsconfig.node.tsbuildinfo
+vite.config.d.ts
