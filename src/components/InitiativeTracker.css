@@ -1,0 +1,74 @@
+.initiative-tracker {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  color: var(--ls-primary-text-color);
+}
+
+.initiative-tracker h2 {
+  margin: 0;
+  text-align: center;
+}
+
+.add-combatant-form {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.add-combatant-form input {
+  flex-grow: 1;
+  padding: 0.5rem;
+  border: 1px solid var(--ls-border-color);
+  border-radius: 4px;
+  background-color: var(--ls-secondary-background-color);
+  color: var(--ls-primary-text-color);
+}
+
+.add-combatant-form button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  background-color: var(--ls-primary-accent-color);
+  color: white;
+  cursor: pointer;
+}
+
+.combatant-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-height: 200px;
+  overflow-y: auto;
+  border: 1px solid var(--ls-border-color);
+  border-radius: 4px;
+}
+
+.combatant-list li {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem;
+  border-bottom: 1px solid var(--ls-border-color);
+}
+
+.combatant-list li:last-child {
+  border-bottom: none;
+}
+
+.controls {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.controls button {
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--ls-border-color);
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.controls button:first-of-type {
+    background-color: var(--ls-primary-accent-color);
+    color: white;
+    border-color: var(--ls-primary-accent-color);
+}
