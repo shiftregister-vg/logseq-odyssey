@@ -3,29 +3,40 @@ import React, { useState, useEffect } from 'react';
 interface Combatant {
   name: string;
   initiative: number;
+  damage: number;
 }
 
 interface InitiativeTrackerProps {
   initialCombatants?: Combatant[];
-  onConfirm: (combatants: Combatant[]) => void;
+  initialRound?: number;
+  onConfirm: (combatants: Combatant[], round: number) => void;
   onCancel: () => void;
 }
 
-const InitiativeTracker: React.FC<InitiativeTrackerProps> = ({ initialCombatants, onConfirm, onCancel }) => {
+const InitiativeTracker: React.FC<InitiativeTrackerProps> = ({ initialCombatants, initialRound, onConfirm, onCancel }) => {
   const [combatants, setCombatants] = useState<Combatant[]>(initialCombatants || []);
   const [name, setName] = useState('');
   const [initiative, setInitiative] = useState('');
+  const [damage, setDamage] = useState('');
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
+  const [round, setRound] = useState(initialRound || 1);
 
   useEffect(() => {
     if (initialCombatants) {
       setCombatants(initialCombatants);
     }
-  }, [initialCombatants]);
+    if (initialRound) {
+      setRound(initialRound);
+    }
+  }, [initialCombatants, initialRound]);
 
   const handleAddOrUpdateCombatant = () => {
     if (name && initiative) {
-      const newCombatant = { name, initiative: parseInt(initiative, 10) };
+      const newCombatant: Combatant = {
+        name,
+        initiative: parseInt(initiative, 10),
+        damage: damage ? parseInt(damage, 10) : 0,
+      };
       if (editingIndex !== null) {
         // Update existing combatant
         const updatedCombatants = combatants.map((c, index) =>
@@ -39,6 +50,7 @@ const InitiativeTracker: React.FC<InitiativeTrackerProps> = ({ initialCombatants
       }
       setName('');
       setInitiative('');
+      setDamage('');
     }
   };
 
@@ -48,6 +60,7 @@ const InitiativeTracker: React.FC<InitiativeTrackerProps> = ({ initialCombatants
       setEditingIndex(null);
       setName('');
       setInitiative('');
+      setDamage('');
     }
   };
 
@@ -55,6 +68,7 @@ const InitiativeTracker: React.FC<InitiativeTrackerProps> = ({ initialCombatants
     const combatant = combatants[indexToEdit];
     setName(combatant.name);
     setInitiative(combatant.initiative.toString());
+    setDamage(combatant.damage.toString());
     setEditingIndex(indexToEdit);
   };
 
@@ -65,14 +79,27 @@ const InitiativeTracker: React.FC<InitiativeTrackerProps> = ({ initialCombatants
     }
   };
 
+  const handleNextRound = () => {
+    setRound(prev => prev + 1);
+  };
+
+  const handlePreviousRound = () => {
+    setRound(prev => Math.max(1, prev - 1));
+  };
+
   const handleConfirm = () => {
-    onConfirm(combatants);
+    onConfirm(combatants, round);
   };
 
   return (
     <div className="initiative-tracker-overlay">
       <div className="initiative-tracker">
         <h2>Initiative Tracker</h2>
+        <div className="round-controls">
+          <button onClick={handlePreviousRound}>Previous Round</button>
+          <span>Round: {round}</span>
+          <button onClick={handleNextRound}>Next Round</button>
+        </div>
         <form className="add-combatant-form" onSubmit={(e) => e.preventDefault()}>
           <input
             type="text"
@@ -88,6 +115,13 @@ const InitiativeTracker: React.FC<InitiativeTrackerProps> = ({ initialCombatants
             onChange={(e) => setInitiative(e.target.value)}
             onKeyPress={handleKeyPress}
           />
+          <input
+            type="number"
+            placeholder="Damage"
+            value={damage}
+            onChange={(e) => setDamage(e.target.value)}
+            onKeyPress={handleKeyPress}
+          />
           <button type="button" onClick={handleAddOrUpdateCombatant}>
             {editingIndex !== null ? 'Update Combatant' : 'Add Combatant'}
           </button>
@@ -95,7 +129,7 @@ const InitiativeTracker: React.FC<InitiativeTrackerProps> = ({ initialCombatants
         <ul className="combatant-list">
           {combatants.map((combatant, index) => (
             <li key={index} onClick={() => handleEditCombatant(index)}>
-              <span>{combatant.name} - {combatant.initiative}</span>
+              <span>{combatant.name} - Init: {combatant.initiative} - Dmg: {combatant.damage}</span>
               <button onClick={(e) => { e.stopPropagation(); handleRemoveCombatant(index); }}>Remove</button>
             </li>
           ))}

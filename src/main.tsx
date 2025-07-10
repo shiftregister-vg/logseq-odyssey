@@ -6,35 +6,44 @@ import '@logseq/libs';
 interface Combatant {
   name: string;
   initiative: number;
+  damage: number;
 }
 
-function parseInitiativeTable(content: string): Combatant[] {
+function parseInitiativeTable(content: string): { combatants: Combatant[]; round: number } {
   const lines = content.split('\n').map(line => line.trim()).filter(line => line.length > 0);
   const combatants: Combatant[] = [];
+  let round = 1;
+
+  // Extract round from the first line if it exists
+  const roundMatch = lines[0].match(/Round: (\d+)/);
+  if (roundMatch && roundMatch[1]) {
+    round = parseInt(roundMatch[1], 10);
+  }
 
   // Look for the header and separator
   let startIndex = -1;
   for (let i = 0; i < lines.length; i++) {
-    if (lines[i].includes('| Name | Initiative |') && i + 1 < lines.length && lines[i + 1].includes('|---|---')) {
+    if (lines[i].includes('| Name | Initiative | Damage |') && i + 1 < lines.length && lines[i + 1].includes('|---|---|---|')) {
       startIndex = i + 2; // Start parsing from the line after the separator
       break;
     }
   }
 
   if (startIndex === -1) {
-    return []; // No table found
+    return { combatants: [], round: 1 }; // No table found
   }
 
   for (let i = startIndex; i < lines.length; i++) {
     const line = lines[i];
-    // A valid row should start and end with '|' and have at least two parts
+    // A valid row should start and end with '|' and have at least three parts
     if (line.startsWith('|') && line.endsWith('|')) {
       const parts = line.split('|').map(part => part.trim()).filter(part => part.length > 0);
-      if (parts.length >= 2) {
+      if (parts.length >= 3) {
         const name = parts[0];
         const initiative = parseInt(parts[1], 10);
-        if (!isNaN(initiative)) {
-          combatants.push({ name, initiative });
+        const damage = parseInt(parts[2], 10);
+        if (!isNaN(initiative) && !isNaN(damage)) {
+          combatants.push({ name, initiative, damage });
         }
       }
     } else {
@@ -42,7 +51,7 @@ function parseInitiativeTable(content: string): Combatant[] {
       break;
     }
   }
-  return combatants;
+  return { combatants, round };
 }
 
 const main = () => {
@@ -158,9 +167,12 @@ const main = () => {
     const key = `odyssey-initiative-tracker-${e.uuid}`;
     const block = await logseq.Editor.getBlock(e.uuid);
     let initialCombatants: Combatant[] = [];
+    let initialRound = 1;
 
     if (block && block.content) {
-      initialCombatants = parseInitiativeTable(block.content);
+      const parsedData = parseInitiativeTable(block.content);
+      initialCombatants = parsedData.combatants;
+      initialRound = parsedData.round;
     }
 
     logseq.provideUI({
@@ -179,10 +191,11 @@ const main = () => {
         reactRoot.render(
           <InitiativeTracker
             initialCombatants={initialCombatants}
-            onConfirm={(combatants) => {
+            initialRound={initialRound}
+            onConfirm={(combatants, round) => {
               const sortedCombatants = [...combatants].sort((a, b) => b.initiative - a.initiative);
-              const table = `| Name | Initiative |\n|---|---|\n${sortedCombatants
-                .map((c) => `| ${c.name} | ${c.initiative} |`)
+              const table = `Round: ${round}\n| Name | Initiative | Damage |\n|---|---|---|\n${sortedCombatants
+                .map((c) => `| ${c.name} | ${c.initiative} | ${c.damage} |`)
                 .join('\n')}`;
               logseq.Editor.updateBlock(e.uuid, table);
               logseq.provideUI({ key, template: `` }); // Close the UI
