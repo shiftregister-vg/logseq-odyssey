@@ -101,3 +101,9 @@
     color: white;
     border-color: var(--ls-primary-accent-color);
 }
+
+.round-controls {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}

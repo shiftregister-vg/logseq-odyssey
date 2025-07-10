@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import './InitiativeTracker.css';
 
 interface Combatant {
   name: string;
@@ -92,13 +93,12 @@ const InitiativeTracker: React.FC<InitiativeTrackerProps> = ({ initialCombatants
   };
 
   return (
-    <div className="initiative-tracker-overlay">
+    <div id="odyssey-initiative-tracker-component" className="initiative-tracker-overlay">
       <div className="initiative-tracker">
         <h2>Initiative Tracker</h2>
-        <div className="round-controls">
-          <button onClick={handlePreviousRound}>Previous Round</button>
-          <span>Round: {round}</span>
-          <button onClick={handleNextRound}>Next Round</button>
+        <div className="controls">
+          <span>Current Round: {round}</span>
+          <button onClick={handleNextRound}>Start Next Round</button>
         </div>
         <form className="add-combatant-form" onSubmit={(e) => e.preventDefault()}>
           <input
