@@ -179,7 +179,7 @@ const main = () => {
       key,
       template: `<div id="${key}"></div>`,
       attrs: {
-        title: 'Initiative Tracker',
+        title: 'Odyssey',
       },
     });
 
