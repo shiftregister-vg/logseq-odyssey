@@ -58,8 +58,7 @@ const main = () => {
     }, 0);
   });
 
-  logseq.Editor.registerBlockContextMenuItem('Create Stat Block', async (e) => {
-    const key = `odyssey-creature-stat-block-${e.uuid}`;
+  logseq.Editor.registerBlockContextMenuItem('Creature Stat Block', async (e) => {
     const block = await logseq.Editor.getBlock(e.uuid);
 
     const creatureData: Creature = (block && block.content) ? parseCreatureStatBlock(block.content) : {
@@ -74,33 +73,32 @@ const main = () => {
         challengeRating: '1/8',
     };
 
-    logseq.provideUI({
-      key,
-      template: `<div id="${key}"></div>`,
-      attrs: {
-        title: 'Odyssey Stat Block',
-      },
-    });
+    // Create a new div element for the modal
+    const modalRoot = parent.document.createElement('div');
+    modalRoot.id = `odyssey-creature-stat-block-root-${e.uuid}`;
+    modalRoot.className = 'creature-stat-block-overlay'; // Apply the overlay class
+    parent.document.body.appendChild(modalRoot);
 
-    setTimeout(() => {
-      const rootEl = parent.document.getElementById(key);
-      if (rootEl) {
-        const reactRoot = createRoot(rootEl);
-        reactRoot.render(
-          <CreatureStatBlock
-            initialCreature={creatureData}
-            onConfirm={(creature) => {
-              const markdown = stringifyCreatureToMarkdown(creature);
-              logseq.Editor.updateBlock(e.uuid, markdown);
-              logseq.provideUI({ key, template: `` });
-            }}
-            onCancel={() => {
-              logseq.provideUI({ key, template: `` });
-            }}
-          />
-        );
-      }
-    }, 0);
+    const root = createRoot(modalRoot);
+
+    const handleClose = () => {
+      root.unmount();
+      modalRoot.remove();
+    };
+
+    root.render(
+      <CreatureStatBlock
+        initialCreature={creatureData}
+        onConfirm={(creature) => {
+          const markdown = stringifyCreatureToMarkdown(creature);
+          logseq.Editor.updateBlock(e.uuid, markdown);
+          handleClose();
+        }}
+        onCancel={handleClose}
+      />
+    );
+
+    logseq.showMainUI(); // Ensure Logseq's main UI is visible
   });
 };
 
