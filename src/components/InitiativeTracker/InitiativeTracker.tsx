@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import './InitiativeTracker.css';
-
-interface Combatant {
-  name: string;
-  initiative: number;
-  damage: number;
-}
+import { Combatant } from '../../types';
+import CombatantList from './CombatantList';
+import AddCombatantForm from './AddCombatantForm';
+import RoundTracker from './RoundTracker';
+import Controls from './Controls';
 
 interface InitiativeTrackerProps {
   initialCombatants?: Combatant[];
@@ -39,14 +38,12 @@ const InitiativeTracker: React.FC<InitiativeTrackerProps> = ({ initialCombatants
         damage: damage ? parseInt(damage, 10) : 0,
       };
       if (editingIndex !== null) {
-        // Update existing combatant
         const updatedCombatants = combatants.map((c, index) =>
           index === editingIndex ? newCombatant : c
         );
         setCombatants(updatedCombatants);
         setEditingIndex(null);
       } else {
-        // Add new combatant
         setCombatants([...combatants, newCombatant]);
       }
       setName('');
@@ -75,17 +72,13 @@ const InitiativeTracker: React.FC<InitiativeTrackerProps> = ({ initialCombatants
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
-      e.preventDefault(); // Prevent default form submission behavior
+      e.preventDefault();
       handleAddOrUpdateCombatant();
     }
   };
 
   const handleNextRound = () => {
     setRound(prev => prev + 1);
-  };
-
-  const handlePreviousRound = () => {
-    setRound(prev => Math.max(1, prev - 1));
   };
 
   const handleConfirm = () => {
@@ -96,48 +89,24 @@ const InitiativeTracker: React.FC<InitiativeTrackerProps> = ({ initialCombatants
     <div id="odyssey-initiative-tracker-component" className="initiative-tracker-overlay">
       <div className="initiative-tracker">
         <h2>Initiative Tracker</h2>
-        <div className="controls">
-          <span>Current Round: {round}</span>
-          <button onClick={handleNextRound}>Start Next Round</button>
-        </div>
-        <form className="add-combatant-form" onSubmit={(e) => e.preventDefault()}>
-          <input
-            type="text"
-            placeholder="Combatant Name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            onKeyPress={handleKeyPress}
-          />
-          <input
-            type="number"
-            placeholder="Initiative"
-            value={initiative}
-            onChange={(e) => setInitiative(e.target.value)}
-            onKeyPress={handleKeyPress}
-          />
-          <input
-            type="number"
-            placeholder="Damage"
-            value={damage}
-            onChange={(e) => setDamage(e.target.value)}
-            onKeyPress={handleKeyPress}
-          />
-          <button type="button" onClick={handleAddOrUpdateCombatant}>
-            {editingIndex !== null ? 'Update Combatant' : 'Add Combatant'}
-          </button>
-        </form>
-        <ul className="combatant-list">
-          {combatants.map((combatant, index) => (
-            <li key={index} onClick={() => handleEditCombatant(index)}>
-              <span>{combatant.name} - Init: {combatant.initiative} - Dmg: {combatant.damage}</span>
-              <button onClick={(e) => { e.stopPropagation(); handleRemoveCombatant(index); }}>Remove</button>
-            </li>
-          ))}
-        </ul>
-        <div className="controls">
-          <button onClick={handleConfirm}>Confirm</button>
-          <button onClick={onCancel}>Cancel</button>
-        </div>
+        <RoundTracker round={round} onNextRound={handleNextRound} />
+        <AddCombatantForm
+          name={name}
+          initiative={initiative}
+          damage={damage}
+          editingIndex={editingIndex}
+          onNameChange={setName}
+          onInitiativeChange={setInitiative}
+          onDamageChange={setDamage}
+          onAddOrUpdate={handleAddOrUpdateCombatant}
+          onKeyPress={handleKeyPress}
+        />
+        <CombatantList
+          combatants={combatants}
+          onEdit={handleEditCombatant}
+          onRemove={handleRemoveCombatant}
+        />
+        <Controls onConfirm={handleConfirm} onCancel={onCancel} />
       </div>
     </div>
   );
