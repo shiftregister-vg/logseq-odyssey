@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import './InitiativeTracker.css';
 import { Combatant } from '../../types';
 import CombatantList from './CombatantList';
 import AddCombatantForm from './AddCombatantForm';
