@@ -1,0 +1,48 @@
+.creature-stat-block-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+}
+
+.creature-stat-block {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  color: var(--ls-primary-text-color);
+  background-color: var(--ls-primary-background-color);
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  width: 600px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.creature-stat-block input,
+.creature-stat-block textarea,
+.creature-stat-block select {
+  width: 100%;
+  padding: 0.5rem;
+}
+
+.alignment,
+.speed,
+.ability-scores {
+  display: flex;
+  gap: 0.5rem;
+}
