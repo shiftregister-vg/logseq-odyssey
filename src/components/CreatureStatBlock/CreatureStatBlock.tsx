@@ -107,11 +107,26 @@ const CreatureStatBlock: React.FC<CreatureStatBlockProps> = ({ initialCreature, 
               <div className="form-group">
                 <label>Speed</label>
                 <div className="speed-grid">
-                  <input type="number" name="base" value={creature.speed.base} onChange={(e) => handleNestedChange(e, 'speed')} placeholder="Base Speed" />
-                  <input type="number" name="burrow" value={creature.speed.burrow || ''} onChange={(e) => handleNestedChange(e, 'speed')} placeholder="Burrow" />
-                  <input type="number" name="climb" value={creature.speed.climb || ''} onChange={(e) => handleNestedChange(e, 'speed')} placeholder="Climb" />
-                  <input type="number" name="fly" value={creature.speed.fly || ''} onChange={(e) => handleNestedChange(e, 'speed')} placeholder="Fly" />
-                  <input type="number" name="swim" value={creature.speed.swim || ''} onChange={(e) => handleNestedChange(e, 'speed')} placeholder="Swim" />
+                  <div className="form-group">
+                    <label htmlFor="baseSpeed">Base</label>
+                    <input id="baseSpeed" type="number" name="base" value={creature.speed.base} onChange={(e) => handleNestedChange(e, 'speed')} placeholder="Base Speed" />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="burrowSpeed">Burrow</label>
+                    <input id="burrowSpeed" type="number" name="burrow" value={creature.speed.burrow || ''} onChange={(e) => handleNestedChange(e, 'speed')} placeholder="Burrow" />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="climbSpeed">Climb</label>
+                    <input id="climbSpeed" type="number" name="climb" value={creature.speed.climb || ''} onChange={(e) => handleNestedChange(e, 'speed')} placeholder="Climb" />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="flySpeed">Fly</label>
+                    <input id="flySpeed" type="number" name="fly" value={creature.speed.fly || ''} onChange={(e) => handleNestedChange(e, 'speed')} placeholder="Fly" />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="swimSpeed">Swim</label>
+                    <input id="swimSpeed" type="number" name="swim" value={creature.speed.swim || ''} onChange={(e) => handleNestedChange(e, 'speed')} placeholder="Swim" />
+                  </div>
                   <div className="checkbox-group">
                     <input type="checkbox" name="hover" checked={creature.speed.hover} onChange={(e) => setCreature(p => ({ ...p, speed: { ...p.speed, hover: e.target.checked } }))} id="hover-checkbox" />
                     <label htmlFor="hover-checkbox">Hover</label>
@@ -121,12 +136,30 @@ const CreatureStatBlock: React.FC<CreatureStatBlockProps> = ({ initialCreature, 
               <div className="form-group">
                 <label>Ability Scores</label>
                 <div className="ability-scores-grid">
-                  <input type="number" name="strength" value={creature.abilityScores.strength} onChange={(e) => handleNestedChange(e, 'abilityScores')} placeholder="STR" />
-                  <input type="number" name="dexterity" value={creature.abilityScores.dexterity} onChange={(e) => handleNestedChange(e, 'abilityScores')} placeholder="DEX" />
-                  <input type="number" name="constitution" value={creature.abilityScores.constitution} onChange={(e) => handleNestedChange(e, 'abilityScores')} placeholder="CON" />
-                  <input type="number" name="intelligence" value={creature.abilityScores.intelligence} onChange={(e) => handleNestedChange(e, 'abilityScores')} placeholder="INT" />
-                  <input type="number" name="wisdom" value={creature.abilityScores.wisdom} onChange={(e) => handleNestedChange(e, 'abilityScores')} placeholder="WIS" />
-                  <input type="number" name="charisma" value={creature.abilityScores.charisma} onChange={(e) => handleNestedChange(e, 'abilityScores')} placeholder="CHA" />
+                  <div className="form-group">
+                    <label htmlFor="strength">STR</label>
+                    <input id="strength" type="number" name="strength" value={creature.abilityScores.strength} onChange={(e) => handleNestedChange(e, 'abilityScores')} placeholder="STR" />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="dexterity">DEX</label>
+                    <input id="dexterity" type="number" name="dexterity" value={creature.abilityScores.dexterity} onChange={(e) => handleNestedChange(e, 'abilityScores')} placeholder="DEX" />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="constitution">CON</label>
+                    <input id="constitution" type="number" name="constitution" value={creature.abilityScores.constitution} onChange={(e) => handleNestedChange(e, 'abilityScores')} placeholder="CON" />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="intelligence">INT</label>
+                    <input id="intelligence" type="number" name="intelligence" value={creature.abilityScores.intelligence} onChange={(e) => handleNestedChange(e, 'abilityScores')} placeholder="INT" />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="wisdom">WIS</label>
+                    <input id="wisdom" type="number" name="wisdom" value={creature.abilityScores.wisdom} onChange={(e) => handleNestedChange(e, 'abilityScores')} placeholder="WIS" />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="charisma">CHA</label>
+                    <input id="charisma" type="number" name="charisma" value={creature.abilityScores.charisma} onChange={(e) => handleNestedChange(e, 'abilityScores')} placeholder="CHA" />
+                  </div>
                 </div>
               </div>
               <div className="form-group">
