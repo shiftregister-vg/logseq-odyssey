@@ -215,6 +215,13 @@ const main = () => {
     gap: 0.5rem;
 }
 
+.checkbox-group input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  /* Add any other styling for square checkbox */
+}
+
 .form-actions {
   display: flex;
   justify-content: flex-end;

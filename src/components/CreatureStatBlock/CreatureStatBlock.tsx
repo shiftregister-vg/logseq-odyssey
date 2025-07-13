@@ -127,8 +127,8 @@ const CreatureStatBlock: React.FC<CreatureStatBlockProps> = ({ initialCreature, 
                     <input id="swimSpeed" type="number" name="swim" value={creature.speed.swim || ''} onChange={(e) => handleNestedChange(e, 'speed')} placeholder="Swim" />
                   </div>
                   <div className="checkbox-group">
-                    <input type="checkbox" name="hover" checked={creature.speed.hover} onChange={(e) => setCreature(p => ({ ...p, speed: { ...p.speed, hover: e.target.checked } }))} id="hover-checkbox" />
                     <label htmlFor="hover-checkbox">Hover</label>
+                    <input type="checkbox" name="hover" checked={creature.speed.hover} onChange={(e) => setCreature(p => ({ ...p, speed: { ...p.speed, hover: e.target.checked } }))} id="hover-checkbox" />
                   </div>
                 </div>
               </div>
