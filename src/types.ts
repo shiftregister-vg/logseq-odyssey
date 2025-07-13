@@ -10,10 +10,7 @@ export interface Creature {
   surname?: string;
   type: 'Aberration' | 'Beast' | 'Celestial' | 'Construct' | 'Dragon' | 'Elemental' | 'Fey' | 'Fiend' | 'Giant' | 'Humanoid' | 'Monstrosity' | 'Ooze' | 'Plant' | 'Undead' | 'Swarm';
   size: 'Tiny' | 'Small' | 'Medium' | 'Large' | 'Huge' | 'Gargantuan';
-  alignment: {
-    moral: 'Lawful' | 'Neutral' | 'Chaotic';
-    ethical: 'Good' | 'Neutral' | 'Evil';
-  };
+  alignment: string;
   personalityTrait?: string;
   armorClass: number;
   hitPoints: number;

@@ -78,19 +78,18 @@ const CreatureStatBlock: React.FC<CreatureStatBlockProps> = ({ initialCreature, 
                 </select>
               </div>
               <div className="form-group">
-                <label>Alignment</label>
-                <div className="alignment">
-                  <select name="moral" value={creature.alignment.moral} onChange={(e) => handleNestedChange(e, 'alignment')}>
-                    <option>Lawful</option>
-                    <option>Neutral</option>
-                    <option>Chaotic</option>
-                  </select>
-                  <select name="ethical" value={creature.alignment.ethical} onChange={(e) => handleNestedChange(e, 'alignment')}>
-                    <option>Good</option>
-                    <option>Neutral</option>
-                    <option>Evil</option>
-                  </select>
-                </div>
+                <label htmlFor="alignment">Alignment</label>
+                <select id="alignment" name="alignment" value={creature.alignment} onChange={handleChange}>
+                  <option>Lawful Good</option>
+                  <option>Lawful Neutral</option>
+                  <option>Lawful Evil</option>
+                  <option>Neutral Good</option>
+                  <option>Neutral</option>
+                  <option>Neutral Evil</option>
+                  <option>Chaotic Good</option>
+                  <option>Chaotic Neutral</option>
+                  <option>Chaotic Evil</option>
+                </select>
               </div>
               <div className="form-group">
                 <label htmlFor="personalityTrait">Personality Trait</label>

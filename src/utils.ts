@@ -78,14 +78,11 @@ export function parseCreatureStatBlock(content: string): Creature {
     const nameMatch = line.match(/^> ### (.*?)$/);
     if (nameMatch) creature.name = nameMatch[1];
 
-    const typeSizeAlignmentMatch = line.match(/^> (Tiny|Small|Medium|Large|Huge|Gargantuan) (Aberration|Beast|Celestial|Construct|Dragon|Elemental|Fey|Fiend|Giant|Humanoid|Monstrosity|Ooze|Plant|Undead|Swarm), (Lawful|Neutral|Chaotic) (Good|Neutral|Evil)$/);
+    const typeSizeAlignmentMatch = line.match(/^> (Tiny|Small|Medium|Large|Huge|Gargantuan) (Aberration|Beast|Celestial|Construct|Dragon|Elemental|Fey|Fiend|Giant|Humanoid|Monstrosity|Ooze|Plant|Undead|Swarm), (.*)$/);
     if (typeSizeAlignmentMatch) {
       creature.size = typeSizeAlignmentMatch[1] as Creature['size'];
       creature.type = typeSizeAlignmentMatch[2] as Creature['type'];
-      creature.alignment = {
-        moral: typeSizeAlignmentMatch[3] as Creature['alignment']['moral'],
-        ethical: typeSizeAlignmentMatch[4] as Creature['alignment']['ethical'],
-      };
+      creature.alignment = typeSizeAlignmentMatch[3];
     }
     
     
@@ -184,7 +181,8 @@ export function parseCreatureStatBlock(content: string): Creature {
 
 export function stringifyCreatureToMarkdown(creature: Creature): string {
   let md = `> ### ${creature.name}\n`;
-  md += `> ${creature.size} ${creature.type}, ${creature.alignment.moral} ${creature.alignment.ethical}\n`;
+  md += `> ${creature.size} ${creature.type}, ${creature.alignment}
+`;
   md += `>\n`;
   md += `> - **Armor Class** ${creature.armorClass}\n`;
   md += `> - **Hit Points** ${creature.hitPoints}\n`;
