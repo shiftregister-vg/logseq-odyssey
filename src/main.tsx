@@ -297,7 +297,7 @@ const main = () => {
         name: 'New Creature',
         type: 'Monstrosity',
         size: 'Medium',
-        alignment: 'Neutral Neutral',
+        alignment: 'Neutral',
         armorClass: 10,
         hitPoints: 10,
         speed: { base: 30 },
