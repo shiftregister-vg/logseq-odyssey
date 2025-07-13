@@ -44,4 +44,5 @@ export interface Creature {
   reactions?: string;
   legendaryActions?: string;
   options?: string;
+  description?: string;
 }
