@@ -28,3 +28,6 @@ vite-plugin-logseq-local.js
 vite-plugin-logseq-local.d.ts
 tsconfig.node.tsbuildinfo
 vite.config.d.ts
+
+# Screenshots
+*.png
