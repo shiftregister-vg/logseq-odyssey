@@ -1,3 +1,25 @@
+# [1.1.0](https://github.com/shiftregister-vg/logseq-odyssey/compare/v1.0.0...v1.1.0) (2025-07-14)
+
+
+### Bug Fixes
+
+* **creature-stat-block:** refactor markdown output to use tables ([4fad2ed](https://github.com/shiftregister-vg/logseq-odyssey/commit/4fad2ed63c3a30b4acddb4aac2aed564728e6626))
+* embed creature stat block CSS directly in main.tsx ([34fabea](https://github.com/shiftregister-vg/logseq-odyssey/commit/34fabea222b10820aa2f3ea7dde98e93c68e8001))
+* embed initiative tracker CSS directly in main.tsx ([f8f92c6](https://github.com/shiftregister-vg/logseq-odyssey/commit/f8f92c608f162a24f048c93e1028f1cd4a3d645d))
+* improve hover checkbox styling and layout ([2df793b](https://github.com/shiftregister-vg/logseq-odyssey/commit/2df793bb92c08d0e0cbb5a94e484ee4c1cdc66c5))
+* re-implement creature stat block UI with correct modal styling ([e2ff94c](https://github.com/shiftregister-vg/logseq-odyssey/commit/e2ff94cc2be45596ce3ddf689f92ca03905031bf))
+* re-implement creature stat block UI with correct modal styling ([f39c709](https://github.com/shiftregister-vg/logseq-odyssey/commit/f39c7096bdb39493c8054ed637e988f60f652d12))
+
+
+### Features
+
+* add creature stat block feature ([2faa56d](https://github.com/shiftregister-vg/logseq-odyssey/commit/2faa56d5626c090b581ad14254e0dd9bf80e23f7))
+* add labels to creature stat block fields ([9e325ce](https://github.com/shiftregister-vg/logseq-odyssey/commit/9e325ce73abf08e4c95e55ea6ab29c90fca93c90))
+* add remaining labels to creature stat block fields ([4de7e89](https://github.com/shiftregister-vg/logseq-odyssey/commit/4de7e89794800cc5fd99032e54c8fa109ebd29d5))
+* combine alignment fields into a single field ([c3c96c8](https://github.com/shiftregister-vg/logseq-odyssey/commit/c3c96c8cccb8846c0a818c4b9f4d1f5cb1fc7970))
+* improve creature stat block rendering and parsing ([9c71bf7](https://github.com/shiftregister-vg/logseq-odyssey/commit/9c71bf7bf2100c13509d71ccff8fe55e11ea676a))
+* set default alignment to Neutral ([d0bf308](https://github.com/shiftregister-vg/logseq-odyssey/commit/d0bf3089bb5a51d5a5fb70adea79c975e58d885b))
+
 # 1.0.0 (2025-07-12)
 
 
