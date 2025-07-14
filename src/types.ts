@@ -14,7 +14,7 @@ export interface Creature {
   personalityTrait?: string;
   armorClass: number;
   hitPoints: number;
-  speed: {
+  speed?: { // Made optional
     base: number;
     burrow?: number;
     climb?: number;
