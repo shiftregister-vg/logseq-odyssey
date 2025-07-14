@@ -8,6 +8,27 @@ import { Combatant, Creature } from './types';
 
 import { parseInitiativeTable, parseCreatureStatBlock, stringifyCreatureToMarkdown } from './utils';
 
+const d20Icon = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <polygon points="12,2 20,7 20,17 12,22 4,17 4,7" />
+  <polygon points="12,6 17,15 7,15" />
+  <line x1="12" y1="2" x2="12" y2="6"/>
+  <line x1="20" y1="17" x2="17" y2="15"/>
+  <line x1="4" y1="17" x2="7" y2="15"/>
+</svg>`;
+
+const model = {
+  openSRDLookup() {
+    const key = 'odyssey-srd-lookup-ui';
+    logseq.provideUI({
+      key,
+      template: '<div></div>',
+      attrs: {
+        title: 'SRD Lookup',
+      },
+    });
+  },
+};
+
 const main = () => {
   logseq.provideStyle(`
 .initiative-tracker-overlay {
@@ -250,6 +271,12 @@ const main = () => {
   border: 1px solid var(--ls-border-color);
 }
 `);
+
+  logseq.App.registerUIItem('toolbar', {
+    key: 'odyssey-srd-lookup',
+    template: `<a data-on-click="openSRDLookup" class="button">${d20Icon}</a>`,
+  });
+
   logseq.Editor.registerBlockContextMenuItem('Track Initiative', async (e) => {
     const key = `odyssey-initiative-tracker-${e.uuid}`;
     const block = await logseq.Editor.getBlock(e.uuid);
@@ -342,4 +369,4 @@ const main = () => {
   });
 };
 
-logseq.ready(main).catch(console.error);
+logseq.ready(model, main).catch(console.error);
