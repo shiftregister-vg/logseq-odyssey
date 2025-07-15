@@ -85,9 +85,9 @@ const InitiativeTracker: React.FC<InitiativeTrackerProps> = ({ initialCombatants
   };
 
   return (
-    <div id="odyssey-initiative-tracker-component" className="initiative-tracker-overlay">
-      <div className="initiative-tracker">
-        <h2>Initiative Tracker</h2>
+    <div id="odyssey-initiative-tracker-component" className="fixed inset-0 bg-black bg-opacity-50 z-40">
+      <div className="flex flex-col gap-4 text-primary-text bg-primary-bg p-6 rounded-lg shadow-lg w-96 fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50">
+        <h2 className="text-center text-xl font-semibold mb-2">Initiative Tracker</h2>
         <RoundTracker round={round} onNextRound={handleNextRound} />
         <AddCombatantForm
           name={name}

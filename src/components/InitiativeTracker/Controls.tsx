@@ -6,9 +6,9 @@ interface ControlsProps {
 }
 
 const Controls: React.FC<ControlsProps> = ({ onConfirm, onCancel }) => (
-  <div className="controls">
-    <button onClick={onConfirm}>Confirm</button>
-    <button onClick={onCancel}>Cancel</button>
+  <div className="flex justify-end gap-3">
+    <button onClick={onConfirm} className="p-3 border border-ls-border rounded-md cursor-pointer text-base font-medium bg-primary-accent text-white">Confirm</button>
+    <button onClick={onCancel} className="p-3 border border-ls-border rounded-md cursor-pointer text-base font-medium">Cancel</button>
   </div>
 );
 
