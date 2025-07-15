@@ -28,9 +28,6 @@ const model = {
         top: `${top + rect.height}px`,
         width: '200px',
       },
-      attrs: {
-        title: 'SRD Lookup',
-      },
     });
 
     setTimeout(() => {
@@ -64,9 +61,6 @@ const main = () => {
     logseq.provideUI({
       key,
       template: `<div id="${key}"></div>`,
-      attrs: {
-        title: 'Odyssey',
-      },
     });
 
     // Use a timeout to ensure the UI is rendered before we try to mount the React component
@@ -114,9 +108,6 @@ const main = () => {
     logseq.provideUI({
       key,
       template: `<div id="${key}"></div>`,
-      attrs: {
-        title: 'Odyssey Stat Block',
-      },
     });
 
     setTimeout(() => {

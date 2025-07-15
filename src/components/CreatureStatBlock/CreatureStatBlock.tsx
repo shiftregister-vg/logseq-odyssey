@@ -87,8 +87,8 @@ const CreatureStatBlock: React.FC<CreatureStatBlockProps> = ({ initialCreature, 
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 z-40">
-      <div className="flex flex-col gap-4 text-primary-text bg-primary-bg p-6 rounded-lg shadow-lg w-11/12 max-w-4xl max-h-screen-90 overflow-y-auto fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50">
+    <div className="fixed inset-0 bg-black bg-opacity-25 z-40 flex items-center justify-center">
+      <div className="flex flex-col gap-4 text-primary-text bg-primary-bg p-6 rounded-lg shadow-lg w-auto max-h-screen overflow-y-auto z-50">
         <h2 className="m-0 pb-4 border-b border-ls-border">Creature Stat Block</h2>
         <div className="overflow-y-auto flex-grow pr-4">
           <div className="grid grid-cols-2 gap-8">
