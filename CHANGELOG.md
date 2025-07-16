@@ -1,3 +1,17 @@
+# [1.2.0](https://github.com/shiftregister-vg/logseq-odyssey/compare/v1.1.0...v1.2.0) (2025-07-16)
+
+
+### Bug Fixes
+
+* **ui:** correct popup positioning and sizing ([2112e30](https://github.com/shiftregister-vg/logseq-odyssey/commit/2112e3033037b386d41b63f75ceeee16fc083aaa))
+
+
+### Features
+
+* **srd:** create SRD API library ([f923ff2](https://github.com/shiftregister-vg/logseq-odyssey/commit/f923ff29133c985eaa2174c269c31d87f2bda443))
+* **ui:** add d20 icon to toolbar ([f4e4423](https://github.com/shiftregister-vg/logseq-odyssey/commit/f4e44235eb54efc17b6e7ae221e15b41feeb29cd))
+* update creature stat block editor and parser ([2a3ef55](https://github.com/shiftregister-vg/logseq-odyssey/commit/2a3ef55aee7c6dac21bd7792ee08e55638d32cf9))
+
 # [1.1.0](https://github.com/shiftregister-vg/logseq-odyssey/compare/v1.0.0...v1.1.0) (2025-07-14)
 
 
