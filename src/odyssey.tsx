@@ -61,6 +61,17 @@ const main = () => {
     logseq.provideUI({
       key,
       template: `<div id="${key}"></div>`,
+      attrs: { title: 'Track Initiative' },
+      style: {
+        width: '600px',
+        height: '700px',
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        backgroundColor: 'var(--ls-primary-background-color)',
+        color: 'var(--ls-primary-text-color)',
+      },
     });
 
     // Use a timeout to ensure the UI is rendered before we try to mount the React component

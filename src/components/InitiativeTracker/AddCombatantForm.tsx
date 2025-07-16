@@ -30,7 +30,7 @@ const AddCombatantForm: React.FC<AddCombatantFormProps> = ({
       value={name}
       onChange={(e) => onNameChange(e.target.value)}
       onKeyPress={onKeyPress}
-      className="p-3 border border-ls-border rounded-md bg-secondary-bg text-primary-text text-base"
+      className="p-3 border border-ls-border rounded-md bg-transparent text-primary-text text-base"
     />
     <input
       type="number"
@@ -38,7 +38,7 @@ const AddCombatantForm: React.FC<AddCombatantFormProps> = ({
       value={initiative}
       onChange={(e) => onInitiativeChange(e.target.value)}
       onKeyPress={onKeyPress}
-      className="p-3 border border-ls-border rounded-md bg-secondary-bg text-primary-text text-base"
+      className="p-3 border border-ls-border rounded-md bg-transparent text-primary-text text-base"
     />
     <input
       type="number"
@@ -46,7 +46,7 @@ const AddCombatantForm: React.FC<AddCombatantFormProps> = ({
       value={damage}
       onChange={(e) => onDamageChange(e.target.value)}
       onKeyPress={onKeyPress}
-      className="p-3 border border-ls-border rounded-md bg-secondary-bg text-primary-text text-base"
+      className="p-3 border border-ls-border rounded-md bg-transparent text-primary-text text-base"
     />
     <button type="button" onClick={onAddOrUpdate} className="p-3 border-none rounded-md bg-primary-accent text-white cursor-pointer text-base font-medium self-start">
       {editingIndex !== null ? 'Update Combatant' : 'Add Combatant'}
