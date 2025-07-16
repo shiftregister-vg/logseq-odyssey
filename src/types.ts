@@ -6,14 +6,12 @@ export interface Combatant {
 
 export interface Creature {
   name: string;
-  preName?: string;
-  surname?: string;
+  species?: string;
   type: 'Aberration' | 'Beast' | 'Celestial' | 'Construct' | 'Dragon' | 'Elemental' | 'Fey' | 'Fiend' | 'Giant' | 'Humanoid' | 'Monstrosity' | 'Ooze' | 'Plant' | 'Undead' | 'Swarm';
   size: 'Tiny' | 'Small' | 'Medium' | 'Large' | 'Huge' | 'Gargantuan';
   alignment: string;
-  personalityTrait?: string;
   armorClass: number;
-  hitPoints: number;
+  hitPoints: string;
   speed?: { // Made optional
     base: number;
     burrow?: number;
@@ -39,6 +37,8 @@ export interface Creature {
   senses?: string;
   languages?: string;
   challengeRating: string;
+  proficiencyBonus?: number;
+  notes?: string;
   actions?: string;
   bonusActions?: string;
   reactions?: string;

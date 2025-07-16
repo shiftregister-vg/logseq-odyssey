@@ -85,10 +85,10 @@ const InitiativeTracker: React.FC<InitiativeTrackerProps> = ({ initialCombatants
   };
 
   return (
-    <div id="odyssey-initiative-tracker-component" className="initiative-tracker-overlay">
-      <div className="initiative-tracker">
-        <h2>Initiative Tracker</h2>
+    <div className="p-4 flex flex-col">
+      <div className="flex-grow">
         <RoundTracker round={round} onNextRound={handleNextRound} />
+        <hr />
         <AddCombatantForm
           name={name}
           initiative={initiative}
@@ -100,13 +100,15 @@ const InitiativeTracker: React.FC<InitiativeTrackerProps> = ({ initialCombatants
           onAddOrUpdate={handleAddOrUpdateCombatant}
           onKeyPress={handleKeyPress}
         />
+        <hr />
         <CombatantList
           combatants={combatants}
           onEdit={handleEditCombatant}
           onRemove={handleRemoveCombatant}
         />
-        <Controls onConfirm={handleConfirm} onCancel={onCancel} />
       </div>
+      <hr />
+      <Controls onConfirm={handleConfirm} onCancel={onCancel} />
     </div>
   );
 };
