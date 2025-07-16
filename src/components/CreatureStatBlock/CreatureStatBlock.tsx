@@ -86,22 +86,22 @@ const CreatureStatBlock: React.FC<CreatureStatBlockProps> = ({ initialCreature, 
     });
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    e.stopPropagation();
+  };
+
   return (
     <div className="p-4 flex flex-col">
       <div className="flex-grow">
         <div className="grid grid-cols-2 gap-8">
           <div className="flex flex-col gap-4">
             <div className="flex flex-col gap-2">
-              <label htmlFor="preName" className="font-semibold">Pre-name</label>
-              <input id="preName" name="preName" value={creature.preName || ''} onChange={handleChange} placeholder="Pre-name" className="w-full p-3 bg-transparent text-primary-text border border-ls-border rounded-md text-base" />
-            </div>
-            <div className="flex flex-col gap-2">
               <label htmlFor="name" className="font-semibold">Name</label>
               <input id="name" name="name" value={creature.name} onChange={handleChange} placeholder="Name" className="w-full p-3 bg-transparent text-primary-text border border-ls-border rounded-md text-base" />
             </div>
             <div className="flex flex-col gap-2">
-              <label htmlFor="surname" className="font-semibold">Surname</label>
-              <input id="surname" name="surname" value={creature.surname || ''} onChange={handleChange} placeholder="Surname" className="w-full p-3 bg-transparent text-primary-text border border-ls-border rounded-md text-base" />
+              <label htmlFor="species" className="font-semibold">Species</label>
+              <input id="species" name="species" value={creature.species || ''} onChange={handleChange} placeholder="Species" className="w-full p-3 bg-transparent text-primary-text border border-ls-border rounded-md text-base" />
             </div>
             <div className="flex flex-col gap-2">
               <label htmlFor="type" className="font-semibold">Type</label>
@@ -149,16 +149,12 @@ const CreatureStatBlock: React.FC<CreatureStatBlockProps> = ({ initialCreature, 
               </select>
             </div>
             <div className="flex flex-col gap-2">
-              <label htmlFor="personalityTrait" className="font-semibold">Personality Trait</label>
-              <input id="personalityTrait" name="personalityTrait" value={creature.personalityTrait || ''} onChange={handleChange} placeholder="Personality Trait" className="w-full p-3 bg-transparent text-primary-text border border-ls-border rounded-md text-base" />
-            </div>
-            <div className="flex flex-col gap-2">
               <label htmlFor="armorClass" className="font-semibold">Armor Class</label>
               <input id="armorClass" type="number" name="armorClass" value={creature.armorClass} onChange={handleChange} placeholder="Armor Class" className="w-full p-3 bg-transparent text-primary-text border border-ls-border rounded-md text-base" />
             </div>
             <div className="flex flex-col gap-2">
               <label htmlFor="hitPoints" className="font-semibold">Hit Points</label>
-              <input id="hitPoints" type="number" name="hitPoints" value={creature.hitPoints} onChange={handleChange} placeholder="Hit Points" className="w-full p-3 bg-transparent text-primary-text border border-ls-border rounded-md text-base" />
+              <input id="hitPoints" type="text" name="hitPoints" value={creature.hitPoints} onChange={handleChange} placeholder="Hit Points" className="w-full p-3 bg-transparent text-primary-text border border-ls-border rounded-md text-base" />
             </div>
             <div className="flex flex-col gap-2">
               <label className="font-semibold">Speed</label>
@@ -222,6 +218,10 @@ const CreatureStatBlock: React.FC<CreatureStatBlockProps> = ({ initialCreature, 
               <label htmlFor="challengeRating" className="font-semibold">Challenge Rating</label>
               <input id="challengeRating" name="challengeRating" value={creature.challengeRating} onChange={handleChange} placeholder="Challenge Rating" className="w-full p-3 bg-transparent text-primary-text border border-ls-border rounded-md text-base" />
             </div>
+            <div className="flex flex-col gap-2">
+              <label htmlFor="proficiencyBonus" className="font-semibold">Proficiency Bonus</label>
+              <input id="proficiencyBonus" type="number" name="proficiencyBonus" value={creature.proficiencyBonus || ''} onChange={handleChange} placeholder="Proficiency Bonus" className="w-full p-3 bg-transparent text-primary-text border border-ls-border rounded-md text-base" />
+            </div>
           </div>
 
           <div className="flex flex-col gap-4">
@@ -259,23 +259,27 @@ const CreatureStatBlock: React.FC<CreatureStatBlockProps> = ({ initialCreature, 
             </div>
             <div className="flex flex-col gap-2">
               <label htmlFor="actions" className="font-semibold">Actions</label>
-              <textarea id="actions" name="actions" value={creature.actions || ''} onChange={handleChange} className="w-full p-3 bg-secondary-bg text-primary-text border border-ls-border rounded-md text-base min-h-25 resize-y"></textarea>
+              <textarea id="actions" name="actions" value={creature.actions || ''} onChange={handleChange} onKeyDown={handleKeyDown} className="w-full p-3 bg-secondary-bg text-primary-text border border-ls-border rounded-md text-base min-h-25 resize-y"></textarea>
             </div>
             <div className="flex flex-col gap-2">
               <label htmlFor="bonusActions" className="font-semibold">Bonus Actions</label>
-              <textarea id="bonusActions" name="bonusActions" value={creature.bonusActions || ''} onChange={handleChange} className="w-full p-3 bg-secondary-bg text-primary-text border border-ls-border rounded-md text-base min-h-25 resize-y"></textarea>
+              <textarea id="bonusActions" name="bonusActions" value={creature.bonusActions || ''} onChange={handleChange} onKeyDown={handleKeyDown} className="w-full p-3 bg-secondary-bg text-primary-text border border-ls-border rounded-md text-base min-h-25 resize-y"></textarea>
             </div>
             <div className="flex flex-col gap-2">
               <label htmlFor="reactions" className="font-semibold">Reactions</label>
-              <textarea id="reactions" name="reactions" value={creature.reactions || ''} onChange={handleChange} className="w-full p-3 bg-secondary-bg text-primary-text border border-ls-border rounded-md text-base min-h-25 resize-y"></textarea>
+              <textarea id="reactions" name="reactions" value={creature.reactions || ''} onChange={handleChange} onKeyDown={handleKeyDown} className="w-full p-3 bg-secondary-bg text-primary-text border border-ls-border rounded-md text-base min-h-25 resize-y"></textarea>
             </div>
             <div className="flex flex-col gap-2">
               <label htmlFor="legendaryActions" className="font-semibold">Legendary Actions</label>
-              <textarea id="legendaryActions" name="legendaryActions" value={creature.legendaryActions || ''} onChange={handleChange} className="w-full p-3 bg-secondary-bg text-primary-text border border-ls-border rounded-md text-base min-h-25 resize-y"></textarea>
+              <textarea id="legendaryActions" name="legendaryActions" value={creature.legendaryActions || ''} onChange={handleChange} onKeyDown={handleKeyDown} className="w-full p-3 bg-secondary-bg text-primary-text border border-ls-border rounded-md text-base min-h-25 resize-y"></textarea>
             </div>
             <div className="flex flex-col gap-2">
               <label htmlFor="options" className="font-semibold">Options</label>
-              <textarea id="options" name="options" value={creature.options || ''} onChange={handleChange} className="w-full p-3 bg-secondary-bg text-primary-text border border-ls-border rounded-md text-base min-h-25 resize-y"></textarea>
+              <textarea id="options" name="options" value={creature.options || ''} onChange={handleChange} onKeyDown={handleKeyDown} className="w-full p-3 bg-secondary-bg text-primary-text border border-ls-border rounded-md text-base min-h-25 resize-y"></textarea>
+            </div>
+            <div className="flex flex-col gap-2">
+              <label htmlFor="notes" className="font-semibold">Notes</label>
+              <textarea id="notes" name="notes" value={creature.notes || ''} onChange={handleChange} onKeyDown={handleKeyDown} className="w-full p-3 bg-secondary-bg text-primary-text border border-ls-border rounded-md text-base min-h-25 resize-y"></textarea>
             </div>
           </div>
         </div>
