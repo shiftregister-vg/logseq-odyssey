@@ -1,6 +1,6 @@
 import { LSPluginUserEvents } from "@logseq/libs/dist/LSPlugin.user";
 import React from "react";
-import { Combatant, Creature } from './types';
+import { Combatant, Creature, Action } from './types';
 
 let _visible = logseq.isMainUIVisible;
 
@@ -85,12 +85,20 @@ export function parseCreatureStatBlock(content: string): Creature {
     const processSection = () => {
         if (currentSection && sectionContent.length > 0) {
             const text = sectionContent.join('\n').trim();
+            const actions = text.split(/\n\n(?=\*\*\*)/).map(actionText => {
+                const match = actionText.match(/^\*\*\*(.*?)\.\*\*\*\s(.*)$/s);
+                if (match) {
+                    return { name: match[1], description: match[2] };
+                }
+                return null;
+            }).filter(Boolean) as Action[];
+
             switch (currentSection) {
-                case 'ACTIONS': creature.actions = text; break;
-                case 'BONUS ACTIONS': creature.bonusActions = text; break;
-                case 'REACTIONS': creature.reactions = text; break;
-                case 'LEGENDARY ACTIONS': creature.legendaryActions = text; break;
-                case 'OPTIONS': creature.options = text; break;
+                case 'ACTIONS': creature.actions = actions; break;
+                case 'BONUS ACTIONS': creature.bonusActions = actions; break;
+                case 'REACTIONS': creature.reactions = actions; break;
+                case 'LEGENDARY ACTIONS': creature.legendaryActions = actions; break;
+                case 'OPTIONS': creature.options = actions; break;
                 case 'DESCRIPTION': creature.description = text; break;
                 case 'NOTES': creature.notes = text; break;
             }
@@ -263,11 +271,11 @@ export function stringifyCreatureToMarkdown(creature: Creature): string {
         md += `| ${creature.abilityScores.strength} (${getModifier(creature.abilityScores.strength)}) | ${creature.abilityScores.dexterity} (${getModifier(creature.abilityScores.dexterity)}) | ${creature.abilityScores.constitution} (${getModifier(creature.abilityScores.constitution)}) | ${creature.abilityScores.intelligence} (${getModifier(creature.abilityScores.intelligence)}) | ${creature.abilityScores.wisdom} (${getModifier(creature.abilityScores.wisdom)}) | ${creature.abilityScores.charisma} (${getModifier(creature.abilityScores.charisma)}) |\n`;
         md += `---\n`;
     }
-    if (creature.actions) md += `\n**ACTIONS**\n---\n${creature.actions}\n`;
-    if (creature.bonusActions) md += `\n**BONUS ACTIONS**\n---\n${creature.bonusActions}\n`;
-    if (creature.reactions) md += `\n**REACTIONS**\n---\n${creature.reactions}\n`;
-    if (creature.legendaryActions) md += `\n**LEGENDARY ACTIONS**\n---\n${creature.legendaryActions}\n`;
-    if (creature.options) md += `\n**OPTIONS**\n---\n${creature.options}\n`;
+    if (creature.actions) md += `\n**ACTIONS**\n---\n${creature.actions.map(a => `***${a.name}.*** ${a.description}`).join('\n\n')}`;
+    if (creature.bonusActions) md += `\n**BONUS ACTIONS**\n---\n${creature.bonusActions.map(a => `***${a.name}.*** ${a.description}`).join('\n\n')}`;
+    if (creature.reactions) md += `\n**REACTIONS**\n---\n${creature.reactions.map(a => `***${a.name}.*** ${a.description}`).join('\n\n')}`;
+    if (creature.legendaryActions) md += `\n**LEGENDARY ACTIONS**\n---\n${creature.legendaryActions.map(a => `***${a.name}.*** ${a.description}`).join('\n\n')}`;
+    if (creature.options) md += `\n**OPTIONS**\n---\n${creature.options.map(a => `***${a.name}.*** ${a.description}`).join('\n\n')}`;
     if (creature.description) md += `\n**DESCRIPTION**\n---\n${creature.description}\n`;
     if (creature.notes) md += `\n**NOTES**\n---\n${creature.notes}\n`;
 

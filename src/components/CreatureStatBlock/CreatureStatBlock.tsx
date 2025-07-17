@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Creature } from '../../types';
+import { Creature, Action } from '../../types';
+import ActionEditor from './ActionEditor';
 
 interface CreatureStatBlockProps {
   initialCreature: Creature;
@@ -84,6 +85,13 @@ const CreatureStatBlock: React.FC<CreatureStatBlockProps> = ({ initialCreature, 
         },
       };
     });
+  };
+
+  const handleActionChange = (field: keyof Creature, actions: Action[]) => {
+    setCreature(prev => ({
+      ...prev,
+      [field]: actions,
+    }));
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -259,23 +267,38 @@ const CreatureStatBlock: React.FC<CreatureStatBlockProps> = ({ initialCreature, 
             </div>
             <div className="flex flex-col gap-2">
               <label htmlFor="actions" className="font-semibold">Actions</label>
-              <textarea id="actions" name="actions" value={creature.actions || ''} onChange={handleChange} onKeyDown={handleKeyDown} className="w-full p-3 bg-secondary-bg text-primary-text border border-ls-border rounded-md text-base min-h-25 resize-y"></textarea>
+              <ActionEditor
+                actions={creature.actions || []}
+                onChange={(actions) => handleActionChange('actions', actions)}
+              />
             </div>
             <div className="flex flex-col gap-2">
               <label htmlFor="bonusActions" className="font-semibold">Bonus Actions</label>
-              <textarea id="bonusActions" name="bonusActions" value={creature.bonusActions || ''} onChange={handleChange} onKeyDown={handleKeyDown} className="w-full p-3 bg-secondary-bg text-primary-text border border-ls-border rounded-md text-base min-h-25 resize-y"></textarea>
+              <ActionEditor
+                actions={creature.bonusActions || []}
+                onChange={(actions) => handleActionChange('bonusActions', actions)}
+              />
             </div>
             <div className="flex flex-col gap-2">
               <label htmlFor="reactions" className="font-semibold">Reactions</label>
-              <textarea id="reactions" name="reactions" value={creature.reactions || ''} onChange={handleChange} onKeyDown={handleKeyDown} className="w-full p-3 bg-secondary-bg text-primary-text border border-ls-border rounded-md text-base min-h-25 resize-y"></textarea>
+              <ActionEditor
+                actions={creature.reactions || []}
+                onChange={(actions) => handleActionChange('reactions', actions)}
+              />
             </div>
             <div className="flex flex-col gap-2">
               <label htmlFor="legendaryActions" className="font-semibold">Legendary Actions</label>
-              <textarea id="legendaryActions" name="legendaryActions" value={creature.legendaryActions || ''} onChange={handleChange} onKeyDown={handleKeyDown} className="w-full p-3 bg-secondary-bg text-primary-text border border-ls-border rounded-md text-base min-h-25 resize-y"></textarea>
+              <ActionEditor
+                actions={creature.legendaryActions || []}
+                onChange={(actions) => handleActionChange('legendaryActions', actions)}
+              />
             </div>
             <div className="flex flex-col gap-2">
               <label htmlFor="options" className="font-semibold">Options</label>
-              <textarea id="options" name="options" value={creature.options || ''} onChange={handleChange} onKeyDown={handleKeyDown} className="w-full p-3 bg-secondary-bg text-primary-text border border-ls-border rounded-md text-base min-h-25 resize-y"></textarea>
+              <ActionEditor
+                actions={creature.options || []}
+                onChange={(actions) => handleActionChange('options', actions)}
+              />
             </div>
             <div className="flex flex-col gap-2">
               <label htmlFor="notes" className="font-semibold">Notes</label>
