@@ -1,6 +1,6 @@
 import { LSPluginUserEvents } from "@logseq/libs/dist/LSPlugin.user";
 import React from "react";
-import { Combatant, Creature, Action } from './types';
+import { Combatant, Creature, Action } from "./types";
 
 let _visible = logseq.isMainUIVisible;
 
