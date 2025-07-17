@@ -110,7 +110,7 @@ const main = () => {
       size: 'Medium',
       alignment: 'Neutral',
       armorClass: 10,
-      hitPoints: 10,
+      hitPoints: '10',
       speed: { base: 30 },
       abilityScores: { strength: 10, dexterity: 10, constitution: 10, intelligence: 10, wisdom: 10, charisma: 10 },
       challengeRating: '1',
