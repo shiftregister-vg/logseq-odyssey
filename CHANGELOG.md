@@ -1,3 +1,15 @@
+# [1.3.0](https://github.com/shiftregister-vg/logseq-odyssey/compare/v1.2.0...v1.3.0) (2025-07-17)
+
+
+### Bug Fixes
+
+* **parser:** improve robustness of stat block parser ([0d92d77](https://github.com/shiftregister-vg/logseq-odyssey/commit/0d92d77b9e9b22fd5f3718df30fad0a9c5255305))
+
+
+### Features
+
+* **actions:** refactor actions to be structured data ([ac5f3ac](https://github.com/shiftregister-vg/logseq-odyssey/commit/ac5f3ac234e6a9b27f6467ce02596b4e73797da7))
+
 # [1.2.0](https://github.com/shiftregister-vg/logseq-odyssey/compare/v1.1.0...v1.2.0) (2025-07-16)
 
 
