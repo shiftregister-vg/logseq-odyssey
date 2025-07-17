@@ -4,6 +4,11 @@ export interface Combatant {
   damage: number;
 }
 
+export interface Action {
+  name: string;
+  description: string;
+}
+
 export interface Creature {
   name: string;
   species?: string;
@@ -39,10 +44,10 @@ export interface Creature {
   challengeRating: string;
   proficiencyBonus?: number;
   notes?: string;
-  actions?: string;
-  bonusActions?: string;
-  reactions?: string;
-  legendaryActions?: string;
-  options?: string;
+  actions?: Action[];
+  bonusActions?: Action[];
+  reactions?: Action[];
+  legendaryActions?: Action[];
+  options?: Action[];
   description?: string;
 }

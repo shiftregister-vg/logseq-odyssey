@@ -1,75 +1,75 @@
 import { LSPluginUserEvents } from "@logseq/libs/dist/LSPlugin.user";
 import React from "react";
-import { Combatant, Creature } from './types';
+import { Combatant, Creature, Action } from './types';
 
 let _visible = logseq.isMainUIVisible;
 
 function subscribeLogseqEvent<T extends LSPluginUserEvents>(
-  eventName: T,
-  handler: (...args: any) => void
+    eventName: T,
+    handler: (...args: any) => void
 ) {
-  logseq.on(eventName, handler);
-  return () => {
-    logseq.off(eventName, handler);
-  };
+    logseq.on(eventName, handler);
+    return () => {
+        logseq.off(eventName, handler);
+    };
 }
 
 const subscribeToUIVisible = (onChange: () => void) =>
-  subscribeLogseqEvent("ui:visible:changed", ({ visible }) => {
-    _visible = visible;
-    onChange();
-  });
+    subscribeLogseqEvent("ui:visible:changed", ({ visible }) => {
+        _visible = visible;
+        onChange();
+    });
 
 export const useAppVisible = () => {
-  return React.useSyncExternalStore(subscribeToUIVisible, () => _visible);
+    return React.useSyncExternalStore(subscribeToUIVisible, () => _visible);
 };
 
 function getModifier(score: number): string {
-  const mod = Math.floor((score - 10) / 2);
-  return mod >= 0 ? `+${mod}` : `${mod}`;
+    const mod = Math.floor((score - 10) / 2);
+    return mod >= 0 ? `+${mod}` : `${mod}`;
 }
 
 export function parseInitiativeTable(content: string): { combatants: Combatant[]; round: number } {
-  const lines = content.split('\n').map(line => line.trim()).filter(line => line.length > 0);
-  const combatants: Combatant[] = [];
-  let round = 1;
+    const lines = content.split('\n').map(line => line.trim()).filter(line => line.length > 0);
+    const combatants: Combatant[] = [];
+    let round = 1;
 
-  if (lines.length > 0) {
-    const roundMatch = lines[0].match(/Round: (\d+)/);
-    if (roundMatch && roundMatch[1]) {
-      round = parseInt(roundMatch[1], 10);
-    }
-  }
-
-  let startIndex = -1;
-  for (let i = 0; i < lines.length; i++) {
-    if (lines[i].includes('| Name | Initiative | Damage |') && i + 1 < lines.length && lines[i + 1].includes('|---|---|---|')) {
-      startIndex = i + 2;
-      break;
-    }
-  }
-
-  if (startIndex === -1) {
-    return { combatants: [], round: 1 };
-  }
-
-  for (let i = startIndex; i < lines.length; i++) {
-    const line = lines[i];
-    if (line.startsWith('|') && line.endsWith('|')) {
-      const parts = line.split('|').map(part => part.trim()).filter(part => part.length > 0);
-      if (parts.length >= 3) {
-        const name = parts[0];
-        const initiative = parseInt(parts[1], 10);
-        const damage = parseInt(parts[2], 10);
-        if (!isNaN(initiative) && !isNaN(damage)) {
-          combatants.push({ name, initiative, damage });
+    if (lines.length > 0) {
+        const roundMatch = lines[0].match(/Round: (\d+)/);
+        if (roundMatch && roundMatch[1]) {
+            round = parseInt(roundMatch[1], 10);
         }
-      }
-    } else {
-      break;
     }
-  }
-  return { combatants, round };
+
+    let startIndex = -1;
+    for (let i = 0; i < lines.length; i++) {
+        if (lines[i].includes('| Name | Initiative | Damage |') && i + 1 < lines.length && lines[i + 1].includes('|---|---|---|')) {
+            startIndex = i + 2;
+            break;
+        }
+    }
+
+    if (startIndex === -1) {
+        return { combatants: [], round: 1 };
+    }
+
+    for (let i = startIndex; i < lines.length; i++) {
+        const line = lines[i];
+        if (line.startsWith('|') && line.endsWith('|')) {
+            const parts = line.split('|').map(part => part.trim()).filter(part => part.length > 0);
+            if (parts.length >= 3) {
+                const name = parts[0];
+                const initiative = parseInt(parts[1], 10);
+                const damage = parseInt(parts[2], 10);
+                if (!isNaN(initiative) && !isNaN(damage)) {
+                    combatants.push({ name, initiative, damage });
+                }
+            }
+        } else {
+            break;
+        }
+    }
+    return { combatants, round };
 }
 
 export function parseCreatureStatBlock(content: string): Creature {
@@ -80,49 +80,76 @@ export function parseCreatureStatBlock(content: string): Creature {
     const lines = content.split('\n');
     let currentSection: string | null = null;
     let sectionContent: string[] = [];
+    let justSawHeader = false; // Flag to track if the last line was a section header
 
     const processSection = () => {
         if (currentSection && sectionContent.length > 0) {
             const text = sectionContent.join('\n').trim();
+            const actions = text.split(/\n\n(?=\*\*\*)/).map(actionText => {
+                const match = actionText.match(/^\*\*\*(.*?)\.\*\*\*\s(.*)$/s);
+                if (match) {
+                    return { name: match[1], description: match[2] };
+                }
+                return null;
+            }).filter(Boolean) as Action[];
+
             switch (currentSection) {
-                case 'ACTIONS': creature.actions = text; break;
-                case 'BONUS ACTIONS': creature.bonusActions = text; break;
-                case 'REACTIONS': creature.reactions = text; break;
-                case 'LEGENDARY ACTIONS': creature.legendaryActions = text; break;
-                case 'OPTIONS': creature.options = text; break;
+                case 'ACTIONS': creature.actions = actions; break;
+                case 'BONUS ACTIONS': creature.bonusActions = actions; break;
+                case 'REACTIONS': creature.reactions = actions; break;
+                case 'LEGENDARY ACTIONS': creature.legendaryActions = actions; break;
+                case 'OPTIONS': creature.options = actions; break;
                 case 'DESCRIPTION': creature.description = text; break;
+                case 'NOTES': creature.notes = text; break;
             }
         }
         sectionContent = [];
     };
 
     for (const line of lines) {
-        const headerMatch = line.match(/^\*\*([A-Z\s]+)\*\*$/);
+        const trimmedLine = line.trim();
+        const headerMatch = trimmedLine.match(/^\*\*([A-Z\s]+)\*\*$/);
+
         if (headerMatch) {
             processSection();
             currentSection = headerMatch[1].trim();
+            justSawHeader = true; // Set the flag
             continue;
         }
 
-        if (line.startsWith('### ')) {
+        if (trimmedLine.startsWith('### ')) {
             processSection();
             currentSection = null;
-            creature.name = line.substring(4).trim();
+            creature.name = trimmedLine.substring(4).trim();
+            justSawHeader = false;
             continue;
         }
 
-        if (line.startsWith('---')) {
-            processSection();
-            currentSection = null;
+        if (trimmedLine === '---') {
+            if (justSawHeader) {
+                // This is the separator right after a header. Ignore it.
+                justSawHeader = false;
+                continue;
+            }
+            if (currentSection) {
+                // This is a separator within a section's content. Keep it.
+                sectionContent.push(line);
+                justSawHeader = false;
+                continue;
+            }
+            // Otherwise, it's a structural separator between tables. Ignore it.
+            justSawHeader = false;
             continue;
         }
 
+        // For any other line, reset the flag and process content
+        justSawHeader = false;
         if (currentSection) {
             sectionContent.push(line);
         } else {
-            if (line.startsWith('|')) {
-                // Table content is handled below
-            } else {
+            // This part handles the top matter (size, type, etc.)
+            // and table parsing is handled separately, so this is fine.
+            if (!trimmedLine.startsWith('|')) {
                 const typeSizeAlignmentMatch = line.match(/^(Tiny|Small|Medium|Large|Huge|Gargantuan) ([a-zA-Z\s]+(?:\s\(.*\))?)(?:, (.*))?$/);
                 if (typeSizeAlignmentMatch) {
                     creature.size = typeSizeAlignmentMatch[1] as Creature['size'];
@@ -138,8 +165,9 @@ export function parseCreatureStatBlock(content: string): Creature {
             }
         }
     }
-    processSection();
+    processSection(); // Process the last section
 
+    // Table parsing logic remains the same
     const tableLines = lines.filter(l => l.startsWith('|'));
     let propertyTable: string[] = [];
     let abilityTable: string[] = [];
@@ -204,58 +232,52 @@ export function parseCreatureStatBlock(content: string): Creature {
 }
 
 export function stringifyCreatureToMarkdown(creature: Creature): string {
-  let md = `### ${creature.name || 'Unnamed Creature'}\n`;
-  if (creature.size && creature.type && creature.alignment) {
-    md += `${creature.size} ${creature.type}${creature.species ? ` (${creature.species})` : ''}, ${creature.alignment}\n`;
-  }
-  md += `---\n`;
-
-  md += `| Property | Value |\n`;
-  md += `| :------- | :---- |\n`;
-  if (creature.armorClass) md += `| **Armor Class** | ${creature.armorClass} |\n`;
-  if (creature.hitPoints) md += `| **Hit Points** | ${creature.hitPoints} |\n`;
-
-  if (creature.speed) {
-    let speedString = `${creature.speed.base || 0}ft.`;
-    if (creature.speed.burrow) speedString += `, burrow ${creature.speed.burrow}ft.`;
-    if (creature.speed.climb) speedString += `, climb ${creature.speed.climb}ft.`;
-    if (creature.speed.fly) speedString += `, fly ${creature.speed.fly}ft.`;
-    if (creature.speed.hover) speedString += ` (hover)`;
-    if (creature.speed.swim) speedString += `, swim ${creature.speed.swim}ft.`;
-    md += `| **Speed** | ${speedString} |\n`;
-  }
-
-  if (creature.savingThrows) md += `| **Saving Throws** | ${creature.savingThrows} |\n`;
-  if (creature.skills) md += `| **Skills** | ${creature.skills} |\n`;
-  if (creature.damageVulnerabilities) md += `| **Damage Vulnerabilities** | ${creature.damageVulnerabilities} |\n`;
-  if (creature.damageResistances) md += `| **Damage Resistances** | ${creature.damageResistances} |\n`;
-  if (creature.damageImmunities) md += `| **Damage Immunities** | ${creature.damageImmunities} |\n`;
-  if (creature.conditionImmunities) md += `| **Condition Immunities** | ${creature.conditionImmunities} |\n`;
-  if (creature.senses) md += `| **Senses** | ${creature.senses} |\n`;
-  if (creature.languages) md += `| **Languages** | ${creature.languages} |\n`;
-  if (creature.challengeRating) md += `| **Challenge** | ${creature.challengeRating} |\n`;
-  if (creature.proficiencyBonus) md += `| **Proficiency Bonus** | ${creature.proficiencyBonus} |\n`;
-  md += `---\n`;
-
-  if (creature.abilityScores) {
-    md += `| STR | DEX | CON | INT | WIS | CHA |\n`;
-    md += `| :-: | :-: | :-: | :-: | :-: | :-: |\n`;
-    md += `| ${creature.abilityScores.strength} (${getModifier(creature.abilityScores.strength)}) | ${creature.abilityScores.dexterity} (${getModifier(creature.abilityScores.dexterity)}) | ${creature.abilityScores.constitution} (${getModifier(creature.abilityScores.constitution)}) | ${creature.abilityScores.intelligence} (${getModifier(creature.abilityScores.intelligence)}) | ${creature.abilityScores.wisdom} (${getModifier(creature.abilityScores.wisdom)}) | ${creature.abilityScores.charisma} (${getModifier(creature.abilityScores.charisma)}) |\n`;
+    let md = `### ${creature.name || 'Unnamed Creature'}\n`;
+    if (creature.size && creature.type && creature.alignment) {
+        md += `${creature.size} ${creature.type}${creature.species ? ` (${creature.species})` : ''}, ${creature.alignment}\n`;
+    }
     md += `---\n`;
-  }
-  if (creature.actions) md += `\n**ACTIONS**\n${creature.actions}\n`;
-  if (creature.bonusActions) md += `\n**BONUS ACTIONS**\n${creature.bonusActions}\n`;
-  if (creature.reactions) md += `\n**REACTIONS**\n${creature.reactions}\n`;
-  if (creature.legendaryActions) md += `\n**LEGENDARY ACTIONS**\n${creature.legendaryActions}\n`;
-  if (creature.options) md += `\n**OPTIONS**\n${creature.options}\n`;
-  if (creature.description) md += `
-**DESCRIPTION**
-${creature.description}
-`;
-  if (creature.notes) md += `
-**NOTES**
-${creature.notes}
-`;
 
-  return md.trim();
+    md += `| Property | Value |\n`;
+    md += `| :------- | :---- |\n`;
+    if (creature.armorClass) md += `| **Armor Class** | ${creature.armorClass} |\n`;
+    if (creature.hitPoints) md += `| **Hit Points** | ${creature.hitPoints} |\n`;
+
+    if (creature.speed) {
+        let speedString = `${creature.speed.base || 0}ft.`;
+        if (creature.speed.burrow) speedString += `, burrow ${creature.speed.burrow}ft.`;
+        if (creature.speed.climb) speedString += `, climb ${creature.speed.climb}ft.`;
+        if (creature.speed.fly) speedString += `, fly ${creature.speed.fly}ft.`;
+        if (creature.speed.hover) speedString += ` (hover)`;
+        if (creature.speed.swim) speedString += `, swim ${creature.speed.swim}ft.`;
+        md += `| **Speed** | ${speedString} |\n`;
+    }
+
+    if (creature.savingThrows) md += `| **Saving Throws** | ${creature.savingThrows} |\n`;
+    if (creature.skills) md += `| **Skills** | ${creature.skills} |\n`;
+    if (creature.damageVulnerabilities) md += `| **Damage Vulnerabilities** | ${creature.damageVulnerabilities} |\n`;
+    if (creature.damageResistances) md += `| **Damage Resistances** | ${creature.damageResistances} |\n`;
+    if (creature.damageImmunities) md += `| **Damage Immunities** | ${creature.damageImmunities} |\n`;
+    if (creature.conditionImmunities) md += `| **Condition Immunities** | ${creature.conditionImmunities} |\n`;
+    if (creature.senses) md += `| **Senses** | ${creature.senses} |\n`;
+    if (creature.languages) md += `| **Languages** | ${creature.languages} |\n`;
+    if (creature.challengeRating) md += `| **Challenge** | ${creature.challengeRating} |\n`;
+    if (creature.proficiencyBonus) md += `| **Proficiency Bonus** | ${creature.proficiencyBonus} |\n`;
+    md += `---\n`;
+
+    if (creature.abilityScores) {
+        md += `| STR | DEX | CON | INT | WIS | CHA |\n`;
+        md += `| :-: | :-: | :-: | :-: | :-: | :-: |\n`;
+        md += `| ${creature.abilityScores.strength} (${getModifier(creature.abilityScores.strength)}) | ${creature.abilityScores.dexterity} (${getModifier(creature.abilityScores.dexterity)}) | ${creature.abilityScores.constitution} (${getModifier(creature.abilityScores.constitution)}) | ${creature.abilityScores.intelligence} (${getModifier(creature.abilityScores.intelligence)}) | ${creature.abilityScores.wisdom} (${getModifier(creature.abilityScores.wisdom)}) | ${creature.abilityScores.charisma} (${getModifier(creature.abilityScores.charisma)}) |\n`;
+        md += `---\n`;
+    }
+    if (creature.actions) md += `\n**ACTIONS**\n---\n${creature.actions.map(a => `***${a.name}.*** ${a.description}`).join('\n\n')}`;
+    if (creature.bonusActions) md += `\n**BONUS ACTIONS**\n---\n${creature.bonusActions.map(a => `***${a.name}.*** ${a.description}`).join('\n\n')}`;
+    if (creature.reactions) md += `\n**REACTIONS**\n---\n${creature.reactions.map(a => `***${a.name}.*** ${a.description}`).join('\n\n')}`;
+    if (creature.legendaryActions) md += `\n**LEGENDARY ACTIONS**\n---\n${creature.legendaryActions.map(a => `***${a.name}.*** ${a.description}`).join('\n\n')}`;
+    if (creature.options) md += `\n**OPTIONS**\n---\n${creature.options.map(a => `***${a.name}.*** ${a.description}`).join('\n\n')}`;
+    if (creature.description) md += `\n**DESCRIPTION**\n---\n${creature.description}\n`;
+    if (creature.notes) md += `\n**NOTES**\n---\n${creature.notes}\n`;
+
+    return md.trim();
 }
