@@ -1,15 +1,28 @@
-# [1.2.0](https://github.com/shiftregister-vg/logseq-odyssey/compare/v1.1.0...v1.2.0) (2025-07-16)
-
-
-### Features
-
-* **creature-stat-block:** refactor actions to be structured data ([ac5f3ac](https://github.com/shiftregister-vg/logseq-odyssey/commit/ac5f3ac2b4d7e5f3a3e3d3e3e3e3e3e3e3e3e3e3))
-* **parser:** improve robustness of stat block parser ([fa54f4b](https://github.com/shiftregister-vg/logseq-odyssey/commit/fa54f4b2b4d7e5f3a3e3d3e3e3e3e3e3e3e3e3e3))
+# [1.3.0](https://github.com/shiftregister-vg/logseq-odyssey/compare/v1.2.0...v1.3.0) (2025-07-17)
 
 
 ### Bug Fixes
 
-* **parser:** improve action parsing and rendering ([0d92d77](https://github.com/shiftregister-vg/logseq-odyssey/commit/0d92d772b4d7e5f3a3e3d3e3e3e3e3e3e3e3e3e3))
+* **parser:** improve robustness of stat block parser ([0d92d77](https://github.com/shiftregister-vg/logseq-odyssey/commit/0d92d77b9e9b22fd5f3718df30fad0a9c5255305))
+
+
+### Features
+
+* **actions:** refactor actions to be structured data ([ac5f3ac](https://github.com/shiftregister-vg/logseq-odyssey/commit/ac5f3ac234e6a9b27f6467ce02596b4e73797da7))
+
+# [1.2.0](https://github.com/shiftregister-vg/logseq-odyssey/compare/v1.1.0...v1.2.0) (2025-07-16)
+
+
+### Bug Fixes
+
+* **ui:** correct popup positioning and sizing ([2112e30](https://github.com/shiftregister-vg/logseq-odyssey/commit/2112e3033037b386d41b63f75ceeee16fc083aaa))
+
+
+### Features
+
+* **srd:** create SRD API library ([f923ff2](https://github.com/shiftregister-vg/logseq-odyssey/commit/f923ff29133c985eaa2174c269c31d87f2bda443))
+* **ui:** add d20 icon to toolbar ([f4e4423](https://github.com/shiftregister-vg/logseq-odyssey/commit/f4e44235eb54efc17b6e7ae221e15b41feeb29cd))
+* update creature stat block editor and parser ([2a3ef55](https://github.com/shiftregister-vg/logseq-odyssey/commit/2a3ef55aee7c6dac21bd7792ee08e55638d32cf9))
 
 # [1.1.0](https://github.com/shiftregister-vg/logseq-odyssey/compare/v1.0.0...v1.1.0) (2025-07-14)
 
