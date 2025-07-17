@@ -86,9 +86,9 @@ export function parseCreatureStatBlock(content: string): Creature {
         if (currentSection && sectionContent.length > 0) {
             const text = sectionContent.join('\n').trim();
             const actions = text.split(/\n\n(?=\*\*\*)/).map(actionText => {
-                const match = actionText.match(/^\*\*\*(.*?)\.\*\*\*\s(.*)$/s);
+                const match = actionText.match(/^\*\*\*(.*?)\*\*\*\s(.*)$/s);
                 if (match) {
-                    return { name: match[1], description: match[2] };
+                    return { name: match[1].trim().replace(/\.$/, ''), description: match[2].trim() };
                 }
                 return null;
             }).filter(Boolean) as Action[];
@@ -271,11 +271,11 @@ export function stringifyCreatureToMarkdown(creature: Creature): string {
         md += `| ${creature.abilityScores.strength} (${getModifier(creature.abilityScores.strength)}) | ${creature.abilityScores.dexterity} (${getModifier(creature.abilityScores.dexterity)}) | ${creature.abilityScores.constitution} (${getModifier(creature.abilityScores.constitution)}) | ${creature.abilityScores.intelligence} (${getModifier(creature.abilityScores.intelligence)}) | ${creature.abilityScores.wisdom} (${getModifier(creature.abilityScores.wisdom)}) | ${creature.abilityScores.charisma} (${getModifier(creature.abilityScores.charisma)}) |\n`;
         md += `---\n`;
     }
-    if (creature.actions) md += `\n**ACTIONS**\n---\n${creature.actions.map(a => `***${a.name}.*** ${a.description}`).join('\n\n')}`;
-    if (creature.bonusActions) md += `\n**BONUS ACTIONS**\n---\n${creature.bonusActions.map(a => `***${a.name}.*** ${a.description}`).join('\n\n')}`;
-    if (creature.reactions) md += `\n**REACTIONS**\n---\n${creature.reactions.map(a => `***${a.name}.*** ${a.description}`).join('\n\n')}`;
-    if (creature.legendaryActions) md += `\n**LEGENDARY ACTIONS**\n---\n${creature.legendaryActions.map(a => `***${a.name}.*** ${a.description}`).join('\n\n')}`;
-    if (creature.options) md += `\n**OPTIONS**\n---\n${creature.options.map(a => `***${a.name}.*** ${a.description}`).join('\n\n')}`;
+    if (creature.actions) md += `\n**ACTIONS**\n---\n${creature.actions.map(a => `***${a.name}.*** ${a.description}`).join('\n\n')}\n`;
+    if (creature.bonusActions) md += `\n**BONUS ACTIONS**\n---\n${creature.bonusActions.map(a => `***${a.name}.*** ${a.description}`).join('\n\n')}\n`;
+    if (creature.reactions) md += `\n**REACTIONS**\n---\n${creature.reactions.map(a => `***${a.name}.*** ${a.description}`).join('\n\n')}\n`;
+    if (creature.legendaryActions) md += `\n**LEGENDARY ACTIONS**\n---\n${creature.legendaryActions.map(a => `***${a.name}.*** ${a.description}`).join('\n\n')}\n`;
+    if (creature.options) md += `\n**OPTIONS**\n---\n${creature.options.map(a => `***${a.name}.*** ${a.description}`).join('\n\n')}\n`;
     if (creature.description) md += `\n**DESCRIPTION**\n---\n${creature.description}\n`;
     if (creature.notes) md += `\n**NOTES**\n---\n${creature.notes}\n`;
 
