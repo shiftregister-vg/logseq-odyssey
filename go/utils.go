@@ -268,7 +268,7 @@ func parseCreatureStatBlock(content string) (*Creature, error) {
 				case "Hit Points":
 					creature.HitPoints = value
 				case "Speed":
-					speedMatch := regexp.MustCompile(`(\d+)ft\\.?`).FindStringSubmatch(value)
+					speedMatch := regexp.MustCompile(`(\d+)ft\.?`).FindStringSubmatch(value)
 					if len(speedMatch) > 1 {
 						creature.Speed.Base, _ = strconv.Atoi(speedMatch[1])
 					}
