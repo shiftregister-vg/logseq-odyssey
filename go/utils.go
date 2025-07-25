@@ -146,28 +146,49 @@ func parseCreatureStatBlock(content string) (*Creature, error) {
 	processSection := func() {
 		if currentSection != "" && len(sectionContent) > 0 {
 			text := strings.TrimSpace(strings.Join(sectionContent, "\n"))
-			re := regexp.MustCompile(`(?m)^\*\*\*(.*?)\*\*\*\s(.*)$`)
-			matches := re.FindAllStringSubmatch(text, -1)
-			actions := []Action{}
-			for _, match := range matches {
-				actions = append(actions, Action{Name: strings.TrimSuffix(strings.TrimSpace(match[1]), "."), Description: strings.TrimSpace(match[2])})
-			}
 
 			switch currentSection {
-			case "ACTIONS":
-				creature.Actions = actions
-			case "BONUS ACTIONS":
-				creature.BonusActions = actions
-			case "REACTIONS":
-				creature.Reactions = actions
-			case "LEGENDARY ACTIONS":
-				creature.LegendaryActions = actions
-			case "OPTIONS":
-				creature.Options = actions
 			case "DESCRIPTION":
 				creature.Description = text
+				sectionContent = nil
+				return
 			case "NOTES":
 				creature.Notes = text
+				sectionContent = nil
+				return
+			}
+
+			actionBlocks := regexp.MustCompile(`\n\n(?=\*\*\*)`).Split(text, -1)
+			actions := []Action{}
+
+			actionRegex := regexp.MustCompile(`(?s)^\*\*\*(.*?)\*\*\*\s*(.*)`)
+
+			for _, block := range actionBlocks {
+				if strings.TrimSpace(block) == "" {
+					continue
+				}
+
+				match := actionRegex.FindStringSubmatch(block)
+				if len(match) > 2 {
+					name := strings.TrimSuffix(strings.TrimSpace(match[1]), ".")
+					description := strings.TrimSpace(match[2])
+					actions = append(actions, Action{Name: name, Description: description})
+				}
+			}
+
+			if len(actions) > 0 {
+				switch currentSection {
+				case "ACTIONS":
+					creature.Actions = actions
+				case "BONUS ACTIONS":
+					creature.BonusActions = actions
+				case "REACTIONS":
+					creature.Reactions = actions
+				case "LEGENDARY ACTIONS":
+					creature.LegendaryActions = actions
+				case "OPTIONS":
+					creature.Options = actions
+				}
 			}
 		}
 		sectionContent = nil
