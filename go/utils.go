@@ -85,7 +85,7 @@ func parseInitiativeTable(content string) (map[string]interface{}, error) {
 
 	startIndex := -1
 	for i, line := range lines {
-		if strings.Contains(line, "| Name | Initiative | Damage |") && i+1 < len(lines) && strings.Contains(lines[i+1], "|---|---|---|") {
+		if strings.Contains(line, "| Name | Initiative | Damage |") && i+1 < len(lines) && strings.Contains(lines[i+1], "|---|---|---") {
 			startIndex = i + 2
 			break
 		}
@@ -158,9 +158,29 @@ func parseCreatureStatBlock(content string) (*Creature, error) {
 				return
 			}
 
-			actionBlocks := regexp.MustCompile(`\n\n(?=\*\*\*)`).Split(text, -1)
-			actions := []Action{}
+			// Split text into paragraphs, then group paragraphs into action blocks.
+			paragraphs := strings.Split(text, "\n\n")
+			var actionBlocks []string
+			var currentBlock string
 
+			for _, p := range paragraphs {
+				trimmedP := strings.TrimSpace(p)
+				if strings.HasPrefix(trimmedP, "***") && currentBlock != "" {
+					actionBlocks = append(actionBlocks, strings.TrimSpace(currentBlock))
+					currentBlock = p
+				} else {
+					if currentBlock == "" {
+						currentBlock = p
+					} else {
+						currentBlock += "\n\n" + p
+					}
+				}
+			}
+			if currentBlock != "" {
+				actionBlocks = append(actionBlocks, strings.TrimSpace(currentBlock))
+			}
+
+			actions := []Action{}
 			actionRegex := regexp.MustCompile(`(?s)^\*\*\*(.*?)\*\*\*\s*(.*)`)
 
 			for _, block := range actionBlocks {
@@ -289,7 +309,7 @@ func parseCreatureStatBlock(content string) (*Creature, error) {
 				case "Hit Points":
 					creature.HitPoints = value
 				case "Speed":
-					speedMatch := regexp.MustCompile(`(\d+)ft\.?`).FindStringSubmatch(value)
+					speedMatch := regexp.MustCompile(`(\d+)ft\\.?`).FindStringSubmatch(value)
 					if len(speedMatch) > 1 {
 						creature.Speed.Base, _ = strconv.Atoi(speedMatch[1])
 					}
