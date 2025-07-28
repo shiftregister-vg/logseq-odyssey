@@ -48,13 +48,14 @@ func parseInitiativeTableJS(this js.Value, args []js.Value) interface{} {
 		return nil
 	}
 	content := args[0].String()
-	data, err := parseInitiativeTable(content)
+	var it model.InitiativeTracker
+	err := it.FromMarkdown(content)
 	if err != nil {
 		js.Global().Get("console").Call("error", err.Error())
 		return nil
 	}
 
-	jsonData, err := json.Marshal(data)
+	jsonData, err := json.Marshal(it)
 	if err != nil {
 		js.Global().Get("console").Call("error", err.Error())
 		return nil
