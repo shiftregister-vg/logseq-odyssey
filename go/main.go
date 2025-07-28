@@ -1,17 +1,18 @@
-
 package main
 
 import (
 	"encoding/json"
 	"syscall/js"
+
+	"github.com/shiftregister-vg/logseq-odyssey/go/model"
 )
 
 func greet(this js.Value, args []js.Value) interface{} {
-    name := "World"
-    if len(args) > 0 {
-        name = args[0].String()
-    }
-    return "Hello, " + name + "!"
+	name := "World"
+	if len(args) > 0 {
+		name = args[0].String()
+	}
+	return "Hello, " + name + "!"
 }
 
 func findMonsterJS(this js.Value, args []js.Value) interface{} {
@@ -39,7 +40,7 @@ func getModifierJS(this js.Value, args []js.Value) interface{} {
 		return nil
 	}
 	score := args[0].Int()
-	return getModifier(score)
+	return model.GetModifier(score)
 }
 
 func parseInitiativeTableJS(this js.Value, args []js.Value) interface{} {
@@ -87,7 +88,7 @@ func stringifyCreatureToMarkdownJS(this js.Value, args []js.Value) interface{} {
 		return nil
 	}
 	creatureJSON := args[0].String()
-	var creature Creature
+	var creature model.Creature
 	err := json.Unmarshal([]byte(creatureJSON), &creature)
 	if err != nil {
 		js.Global().Get("console").Call("error", err.Error())
@@ -97,17 +98,17 @@ func stringifyCreatureToMarkdownJS(this js.Value, args []js.Value) interface{} {
 }
 
 func main() {
-    c := make(chan struct{}, 0)
-    println("Go WebAssembly Initialized")
+	c := make(chan struct{}, 0)
+	println("Go WebAssembly Initialized")
 
-    js.Global().Set("odysseyWasm", js.ValueOf(map[string]interface{}{
-        "greet": js.FuncOf(greet),
-		"findMonster": js.FuncOf(findMonsterJS),
-		"getModifier": js.FuncOf(getModifierJS),
-		"parseInitiativeTable": js.FuncOf(parseInitiativeTableJS),
-		"parseCreatureStatBlock": js.FuncOf(parseCreatureStatBlockJS),
+	js.Global().Set("odysseyWasm", js.ValueOf(map[string]interface{}{
+		"greet":                       js.FuncOf(greet),
+		"findMonster":                 js.FuncOf(findMonsterJS),
+		"getModifier":                 js.FuncOf(getModifierJS),
+		"parseInitiativeTable":        js.FuncOf(parseInitiativeTableJS),
+		"parseCreatureStatBlock":      js.FuncOf(parseCreatureStatBlockJS),
 		"stringifyCreatureToMarkdown": js.FuncOf(stringifyCreatureToMarkdownJS),
-    }))
+	}))
 
-    <-c
+	<-c
 }
