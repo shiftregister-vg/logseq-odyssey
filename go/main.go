@@ -68,7 +68,8 @@ func parseCreatureStatBlockJS(this js.Value, args []js.Value) interface{} {
 		return nil
 	}
 	content := args[0].String()
-	creature, err := parseCreatureStatBlock(content)
+	var creature model.Creature
+	err := creature.FromMarkdown(content)
 	if err != nil {
 		js.Global().Get("console").Call("error", err.Error())
 		return nil
@@ -94,7 +95,12 @@ func stringifyCreatureToMarkdownJS(this js.Value, args []js.Value) interface{} {
 		js.Global().Get("console").Call("error", err.Error())
 		return nil
 	}
-	return stringifyCreatureToMarkdown(&creature)
+	md, err := creature.ToMarkdown()
+	if err != nil {
+		js.Global().Get("console").Call("error", err.Error())
+		return nil
+	}
+	return md
 }
 
 func main() {

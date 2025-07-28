@@ -1,7 +1,6 @@
 package main
 
 import (
-	"log"
 	"regexp"
 	"strconv"
 	"strings"
@@ -68,26 +67,5 @@ func parseInitiativeTable(content string) (map[string]interface{}, error) {
 	}, nil
 }
 
-func parseCreatureStatBlock(content string) (*model.Creature, error) {
-	var (
-		c   model.Creature = model.Creature{}
-		err error
-	)
 
-	err = c.FromMarkdown(content)
-	if err != nil {
-		return nil, err
-	}
-
-	return &c, nil
-}
-
-func stringifyCreatureToMarkdown(creature *model.Creature) string {
-	md, err := creature.ToMarkdown()
-	if err != nil {
-		log.Println(err)
-		return ""
-	}
-	return md
-}
 
