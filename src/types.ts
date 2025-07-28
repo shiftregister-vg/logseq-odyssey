@@ -1,3 +1,8 @@
+export interface InitiativeTracker {
+  combatants: Combatant[];
+  round: number;
+}
+
 export interface Combatant {
   name: string;
   initiative: number;

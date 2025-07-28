@@ -1,33 +1,28 @@
 import React, { useState, useEffect } from 'react';
-import { Combatant } from '../../types';
+import { InitiativeTracker as InitiativeTrackerType, Combatant } from '../../types';
 import CombatantList from './CombatantList';
 import AddCombatantForm from './AddCombatantForm';
 import RoundTracker from './RoundTracker';
 import Controls from './Controls';
 
 interface InitiativeTrackerProps {
-  initialCombatants?: Combatant[];
-  initialRound?: number;
-  onConfirm: (combatants: Combatant[], round: number) => void;
+  initialInitiativeTracker?: InitiativeTrackerType;
+  onConfirm: (initiativeTracker: InitiativeTrackerType) => void;
   onCancel: () => void;
 }
 
-const InitiativeTracker: React.FC<InitiativeTrackerProps> = ({ initialCombatants, initialRound, onConfirm, onCancel }) => {
-  const [combatants, setCombatants] = useState<Combatant[]>(initialCombatants || []);
+const InitiativeTracker: React.FC<InitiativeTrackerProps> = ({ initialInitiativeTracker, onConfirm, onCancel }) => {
+  const [initiativeTracker, setInitiativeTracker] = useState<InitiativeTrackerType>(initialInitiativeTracker || { combatants: [], round: 1 });
   const [name, setName] = useState('');
   const [initiative, setInitiative] = useState('');
   const [damage, setDamage] = useState('');
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
-  const [round, setRound] = useState(initialRound || 1);
 
   useEffect(() => {
-    if (initialCombatants) {
-      setCombatants(initialCombatants);
+    if (initialInitiativeTracker) {
+      setInitiativeTracker(initialInitiativeTracker);
     }
-    if (initialRound) {
-      setRound(initialRound);
-    }
-  }, [initialCombatants, initialRound]);
+  }, [initialInitiativeTracker]);
 
   const handleAddOrUpdateCombatant = () => {
     if (name && initiative) {
@@ -37,13 +32,13 @@ const InitiativeTracker: React.FC<InitiativeTrackerProps> = ({ initialCombatants
         damage: damage ? parseInt(damage, 10) : 0,
       };
       if (editingIndex !== null) {
-        const updatedCombatants = combatants.map((c, index) =>
+        const updatedCombatants = initiativeTracker.combatants.map((c, index) =>
           index === editingIndex ? newCombatant : c
         );
-        setCombatants(updatedCombatants);
+        setInitiativeTracker({ ...initiativeTracker, combatants: updatedCombatants });
         setEditingIndex(null);
       } else {
-        setCombatants([...combatants, newCombatant]);
+        setInitiativeTracker({ ...initiativeTracker, combatants: [...initiativeTracker.combatants, newCombatant] });
       }
       setName('');
       setInitiative('');
@@ -52,7 +47,7 @@ const InitiativeTracker: React.FC<InitiativeTrackerProps> = ({ initialCombatants
   };
 
   const handleRemoveCombatant = (indexToRemove: number) => {
-    setCombatants(combatants.filter((_, index) => index !== indexToRemove));
+    setInitiativeTracker({ ...initiativeTracker, combatants: initiativeTracker.combatants.filter((_, index) => index !== indexToRemove) });
     if (editingIndex === indexToRemove) {
       setEditingIndex(null);
       setName('');
@@ -62,7 +57,7 @@ const InitiativeTracker: React.FC<InitiativeTrackerProps> = ({ initialCombatants
   };
 
   const handleEditCombatant = (indexToEdit: number) => {
-    const combatant = combatants[indexToEdit];
+    const combatant = initiativeTracker.combatants[indexToEdit];
     setName(combatant.name);
     setInitiative(combatant.initiative.toString());
     setDamage(combatant.damage.toString());
@@ -77,17 +72,17 @@ const InitiativeTracker: React.FC<InitiativeTrackerProps> = ({ initialCombatants
   };
 
   const handleNextRound = () => {
-    setRound(prev => prev + 1);
+    setInitiativeTracker({ ...initiativeTracker, round: initiativeTracker.round + 1 });
   };
 
   const handleConfirm = () => {
-    onConfirm(combatants, round);
+    onConfirm(initiativeTracker);
   };
 
   return (
     <div className="p-4 flex flex-col">
       <div className="flex-grow">
-        <RoundTracker round={round} onNextRound={handleNextRound} />
+        <RoundTracker round={initiativeTracker.round} onNextRound={handleNextRound} />
         <hr />
         <AddCombatantForm
           name={name}
@@ -102,7 +97,7 @@ const InitiativeTracker: React.FC<InitiativeTrackerProps> = ({ initialCombatants
         />
         <hr />
         <CombatantList
-          combatants={combatants}
+          combatants={initiativeTracker.combatants}
           onEdit={handleEditCombatant}
           onRemove={handleRemoveCombatant}
         />

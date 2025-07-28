@@ -2,19 +2,16 @@ import { BlockCommandCallback } from "@logseq/libs/dist/LSPlugin";
 import { createRoot } from "react-dom/client";
 import InitiativeTracker from "../components/InitiativeTracker/InitiativeTracker";
 import { doc } from "../globals/globals";
-import { Combatant } from "../types";
+import { InitiativeTracker as InitiativeTrackerType } from "../types";
 import { parseInitiativeTable } from "../utils";
 
 export const initiativeTracker: BlockCommandCallback = async (e) => {
   const key = `odyssey-initiative-tracker-${e.uuid}`;
   const block = await logseq.Editor.getBlock(e.uuid);
-  let initialCombatants: Combatant[] = [];
-  let initialRound = 1;
+  let initialInitiativeTracker: InitiativeTrackerType = { combatants: [], round: 1 };
 
   if (block && block.content) {
-    const parsedData = parseInitiativeTable(block.content);
-    initialCombatants = parsedData.combatants;
-    initialRound = parsedData.round;
+    initialInitiativeTracker = parseInitiativeTable(block.content);
   }
 
   logseq.provideUI({
@@ -40,11 +37,10 @@ export const initiativeTracker: BlockCommandCallback = async (e) => {
       const reactRoot = createRoot(rootEl);
       reactRoot.render(
         <InitiativeTracker
-          initialCombatants={initialCombatants}
-          initialRound={initialRound}
-          onConfirm={(combatants, round) => {
-            const sortedCombatants = [...combatants].sort((a, b) => b.initiative - a.initiative);
-            const table = `Round: ${round}\n| Name | Initiative | Damage |\n|---|---|---|\n${sortedCombatants
+          initialInitiativeTracker={initialInitiativeTracker}
+          onConfirm={(initiativeTracker) => {
+            const sortedCombatants = [...initiativeTracker.combatants].sort((a, b) => b.initiative - a.initiative);
+            const table = `Round: ${initiativeTracker.round}\n| Name | Initiative | Damage |\n|---|---|---|\n${sortedCombatants
               .map((c) => `| ${c.name} | ${c.initiative} | ${c.damage} |`)
               .join('\n')}`;
             logseq.Editor.updateBlock(e.uuid, table);
