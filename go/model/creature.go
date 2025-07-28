@@ -58,8 +58,12 @@ func (creature *Creature) FromMarkdown(content string) error {
 	creature.AbilityScores.Intelligence = 10
 	creature.AbilityScores.Wisdom = 10
 	creature.AbilityScores.Charisma = 10
+	if content == "" {
+		return nil
+	}
 
 	lines := strings.Split(content, "\n")
+
 	var currentSection string
 	var sectionContent []string
 	justSawHeader := false
@@ -230,16 +234,40 @@ func (creature *Creature) FromMarkdown(content string) error {
 				case "Hit Points":
 					creature.HitPoints = value
 				case "Speed":
-					speedMatch := regexp.MustCompile(`(\d+)ft\\.?`).FindStringSubmatch(value)
-					if len(speedMatch) > 1 {
-						creature.Speed.Base, _ = strconv.Atoi(speedMatch[1])
+					speedParts := strings.Split(value, ",")
+					for _, part := range speedParts {
+						part = strings.TrimSpace(part)
+						if strings.HasSuffix(part, "ft.") {
+							val, err := strconv.Atoi(strings.TrimSuffix(part, "ft."))
+							if err == nil {
+								if strings.Contains(part, "burrow") {
+									creature.Speed.Burrow = val
+								} else if strings.Contains(part, "climb") {
+									creature.Speed.Climb = val
+								} else if strings.Contains(part, "fly") {
+									creature.Speed.Fly = val
+								} else if strings.Contains(part, "swim") {
+									creature.Speed.Swim = val
+								} else {
+									creature.Speed.Base = val
+								}
+							}
+						} else if strings.Contains(part, "(hover)") {
+							creature.Speed.Hover = true
+						}
 					}
 				case "Saving Throws":
 					creature.SavingThrows = value
 				case "Skills":
 					creature.Skills = value
+				case "Damage Vulnerabilities":
+					creature.DamageVulnerabilities = value
 				case "Damage Resistances":
 					creature.DamageResistances = value
+				case "Damage Immunities":
+					creature.DamageImmunities = value
+				case "Condition Immunities":
+					creature.ConditionImmunities = value
 				case "Senses":
 					creature.Senses = value
 				case "Languages":
@@ -286,7 +314,7 @@ func (creature *Creature) ToMarkdown() (string, error) {
 	md += "---\n"
 
 	md += "| Property | Value |\n"
-	md += "| :------- | :---- |\n"
+	md += "| :--- | :--- |\n"
 	if creature.ArmorClass != 0 {
 		md += fmt.Sprintf("| **Armor Class** | %d |\n", creature.ArmorClass)
 	}
@@ -342,7 +370,7 @@ func (creature *Creature) ToMarkdown() (string, error) {
 		md += fmt.Sprintf("| **Challenge** | %s |\n", creature.ChallengeRating)
 	}
 	if creature.ProficiencyBonus != 0 {
-		md += fmt.Sprintf("| **Proficiency Bonus** | %d |\n", creature.ProficiencyBonus)
+		md += fmt.Sprintf("| **Proficiency Bonus** | +%d |\n", creature.ProficiencyBonus)
 	}
 	md += "---\n"
 
@@ -359,39 +387,56 @@ func (creature *Creature) ToMarkdown() (string, error) {
 
 	if len(creature.Actions) > 0 {
 		md += "\n**ACTIONS**\n---\n"
-		for _, a := range creature.Actions {
-			md += fmt.Sprintf("***%s.*** %s\n\n", a.Name, a.Description)
+		for i, a := range creature.Actions {
+			md += fmt.Sprintf("***%s.*** %s", a.Name, a.Description)
+			if i < len(creature.Actions)-1 {
+				md += "\n\n"
+			}
 		}
 	}
 	if len(creature.BonusActions) > 0 {
-		md += "\n**BONUS ACTIONS**\n---\n"
-		for _, a := range creature.BonusActions {
-			md += fmt.Sprintf("***%s.*** %s\n\n", a.Name, a.Description)
+		md += "\n\n**BONUS ACTIONS**\n---\n"
+		for i, a := range creature.BonusActions {
+			md += fmt.Sprintf("***%s.*** %s", a.Name, a.Description)
+			if i < len(creature.BonusActions)-1 {
+				md += "\n\n"
+			}
 		}
 	}
 	if len(creature.Reactions) > 0 {
-		md += "\n**REACTIONS**\n---\n"
-		for _, a := range creature.Reactions {
-			md += fmt.Sprintf("***%s.*** %s\n\n", a.Name, a.Description)
+		md += "\n\n**REACTIONS**\n---\n"
+		for i, a := range creature.Reactions {
+			md += fmt.Sprintf("***%s.*** %s", a.Name, a.Description)
+			if i < len(creature.Reactions)-1 {
+				md += "\n\n"
+			}
 		}
 	}
 	if len(creature.LegendaryActions) > 0 {
-		md += "\n**LEGENDARY ACTIONS**\n---\n"
-		for _, a := range creature.LegendaryActions {
-			md += fmt.Sprintf("***%s.*** %s\n\n", a.Name, a.Description)
+		md += "\n\n**LEGENDARY ACTIONS**\n---\n"
+		for i, a := range creature.LegendaryActions {
+			md += fmt.Sprintf("***%s.*** %s", a.Name, a.Description)
+			if i < len(creature.LegendaryActions)-1 {
+				md += "\n\n"
+			}
 		}
 	}
 	if len(creature.Options) > 0 {
-		md += "\n**OPTIONS**\n---\n"
-		for _, a := range creature.Options {
-			md += fmt.Sprintf("***%s.*** %s\n\n", a.Name, a.Description)
+		md += "\n\n**OPTIONS**\n---\n"
+		for i, a := range creature.Options {
+			md += fmt.Sprintf("***%s.*** %s", a.Name, a.Description)
+			if i < len(creature.Options)-1 {
+				md += "\n\n"
+			}
 		}
 	}
-	if creature.Description != "" {
-		md += fmt.Sprintf("\n**DESCRIPTION**\n---\n%s\n", creature.Description)
+	if len(creature.Description) > 0 {
+		md += "\n\n**DESCRIPTION**\n---\n"
+		md += creature.Description
 	}
-	if creature.Notes != "" {
-		md += fmt.Sprintf("\n**NOTES**\n---\n%s\n", creature.Notes)
+	if len(creature.Notes) > 0 {
+		md += "\n\n**NOTES**\n---\n"
+		md += creature.Notes
 	}
 
 	return strings.TrimSpace(md), nil

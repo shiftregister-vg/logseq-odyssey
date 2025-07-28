@@ -1,7 +1,6 @@
 package model
 
 import (
-	"regexp"
 	"strconv"
 	"strings"
 )
@@ -29,14 +28,18 @@ func (it *InitiativeTracker) FromMarkdown(content string) error {
 	lines := strings.Split(content, "\n")
 
 	if len(lines) > 0 {
-		re := regexp.MustCompile(`Round: (\d+)`)
-		matches := re.FindStringSubmatch(lines[0])
-		if len(matches) > 1 {
-			it.Round, _ = strconv.Atoi(matches[1])
+		for _, line := range lines {
+			if strings.HasPrefix(line, "Round: ") {
+				round, err := strconv.Atoi(strings.TrimPrefix(line, "Round: "))
+				if err == nil {
+					it.Round = round
+				}
+			}
 		}
 	}
 
 	startIndex := -1
+
 	for i, line := range lines {
 		if strings.Contains(line, "| Name | Initiative | Damage |") && i+1 < len(lines) && strings.Contains(lines[i+1], "|---|---|---") {
 			startIndex = i + 2
