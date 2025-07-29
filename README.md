@@ -1,6 +1,6 @@
 # Odyssey Logseq Plugin 🚀
 
-Odyssey is a Logseq plugin designed to provide useful tools for Dungeon Masters and players in tabletop role-playing games.
+Odyssey is a Logseq plugin designed to provide useful tools for Dungeon Masters and players in tabletop role-playing games. The core logic is written in Go and compiled to WebAssembly for performance, with the UI built in React and TypeScript.
 
 ## Features
 
