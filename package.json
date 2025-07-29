@@ -4,7 +4,8 @@
   "main": "dist/index.html",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build:wasm": "cd go && GOOS=js GOARCH=wasm go build -o ../public/odyssey.wasm",
+    "build": "pnpm build:wasm && tsc && vite build",
     "preinstall": "npx only-allow pnpm"
   },
   "license": "MIT",

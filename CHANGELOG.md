@@ -1,3 +1,9 @@
+# [1.4.0](https://github.com/shiftregister-vg/logseq-odyssey/compare/v1.3.0...v1.4.0) (2025-07-28)
+
+### Features
+
+* **core:** migrate core logic to go/wasm for improved performance and maintainability ([94a2daf](https://github.com/shiftregister-vg/logseq-odyssey/commit/94a2daf229483d2bda443))
+
 # [1.3.0](https://github.com/shiftregister-vg/logseq-odyssey/compare/v1.2.0...v1.3.0) (2025-07-17)
 
 
